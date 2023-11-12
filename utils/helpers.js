@@ -191,12 +191,12 @@ export async function checkGwei(goodGwei) {
                 );
                 await defaultSleep(20, false);
             } else {
-                console.log("")
+                console.log("");
                 return true;
             }
         }
     } catch (e) {
-        console.log("")
+        console.log("");
         return await checkGwei(goodGwei);
     }
 }

@@ -78,6 +78,18 @@ export class MetamaskBridge extends MetamaskBridgeSetup {
             });
         }
         if (!resp?.data) return;
+        if (resp.data.length == 0) {
+            log(
+                randomChalk(
+                    `no routes available for ${this.fromToken} | ${this.fromNetwork} --> ${this.toToken} | ${this.toNetwork}`,
+                ),
+            );
+            return {
+                code: -1,
+                data: "",
+                log: `no routes available for ${this.fromToken} | ${this.fromNetwork} --> ${this.toToken} | ${this.toNetwork}`,
+            };
+        }
         this.logAvailableBridges(resp.data);
         log(c.green(`selected bridge: ${resp.data[0].quote.bridges[0]}`));
         return await this.bridge(resp.data[0].trade);
