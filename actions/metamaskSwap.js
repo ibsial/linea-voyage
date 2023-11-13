@@ -142,7 +142,7 @@ export class MetamaskSwap extends MetamaskSwapSetup {
         }
     }
     logAvailableRoutes(quotes) {
-        let losses;
+        let losses = [];
         for (let i = 0; i < quotes.length; i++) {
             let initialAmount = quotes[i].priceSlippage.sourceAmountInUSD;
             let receiveAmount = quotes[i].priceSlippage.destinationAmountInUSD;

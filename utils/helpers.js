@@ -143,7 +143,7 @@ export async function getGasPrice(networkName) {
         };
         return gasPrice;
     } catch (e) {
-        log(e);
+        // log(e);
         let provider = new JsonRpcProvider(chains[networkName].rpc);
         return (await provider.getFeeData()).gasPrice;
     }

@@ -134,8 +134,8 @@ export const swapData = {
             address: "0xe5D7C2a44FfDDf6b295A15c148167daaAf5Cf34f",
             decimals: 18,
         },
-        USDCe: {
-            name: "USDCe",
+        USDC: {
+            name: "USDC",
             address: "0x176211869ca2b568f2a7d4ee941e073a821ee1ff",
             decimals: 6,
         },
