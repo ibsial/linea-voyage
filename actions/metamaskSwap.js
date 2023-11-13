@@ -28,9 +28,10 @@ export class MetamaskSwap extends MetamaskSwapSetup {
         this.web3wrapper = new WEb3Wrapper(this.signer, this.network);
         this.baseUrl = `https://swap.metaswap.codefi.network/networks/${chains[this.network].id}`;
     }
-    async swap(txData, tryCount = 0, lastStatus = returnStatuses.fail) {
+    async swap(bestRoute, failedDexes = [], tryCount = 0) {
+        let txData = bestRoute.trade;
         if (tryCount >= maxRetries) {
-            return lastStatus;
+            return returnStatuses.fail;
         }
         tryCount++;
         let gasPriceData = await getGasPrice(this.network);
@@ -42,14 +43,12 @@ export class MetamaskSwap extends MetamaskSwapSetup {
         } catch (e) {
             log(e);
             log(c.red(`swap failed...`));
-            return this.swap(txData, tryCount, {
-                code: -1,
-                data: "",
-                log: `swap failed: ${e.message}`,
-            });
+            await defaultSleep(10);
+            failedDexes.push(bestRoute.aggregator);
+            return this.executeRoute(tryCount, failedDexes);
         }
     }
-    async executeRoute(tryCount = 0, lastStatus = returnStatuses.fail) {
+    async executeRoute(tryCount = 0, failedDexes = []) {
         if (tryCount >= maxRetries) {
             return lastStatus;
         }
@@ -92,24 +91,32 @@ export class MetamaskSwap extends MetamaskSwapSetup {
         } catch (e) {
             log(e);
             log(c.red(`error on getSwapQoute`));
-            return await this.executeRoute(tryCount, {
-                code: -1,
-                data: "",
-                log: `error on getSwapQoute: ${e.reason}`,
-            });
+            return await this.executeRoute(tryCount, failedDexes);
         }
         if (!resp?.data) return { code: 0, data: "", log: `bad response` };
         if (resp.data.length == 0) {
-            log(randomChalk(`no available routes for swap: ${this.fromToken} --> ${this.toToken}`));
+            log(
+                randomChalk(
+                    `no available routes for swap: ${this.fromToken} --> ${this.toToken} | ${this.network}`,
+                ),
+            );
             return { code: -1, data: "", log: `no routes available` };
         }
-        let bestRoute = this.logAvailableRoutes(resp.data);
+        let bestRoute = this.filterAvailableRoutes(resp.data, failedDexes);
+        if (bestRoute.length == 0) {
+            log(
+                randomChalk(
+                    `no routes left for swap: ${this.fromToken} --> ${this.toToken} | ${this.network}`,
+                ),
+            );
+            return { code: -1, data: "", log: `no routes available` };
+        }
         log(
             c.green(
                 `selected DEX: ${bestRoute.aggregator} | volume: ${bestRoute.priceSlippage.sourceAmountInUSD} USD`,
             ),
         );
-        return await this.swap(bestRoute.trade);
+        return await this.swap(bestRoute, failedDexes);
     }
     async getRandomAmount(tokenName = this.fromToken) {
         if (this.amountFromTo[0].includes("%") && this.amountFromTo[1].includes("%")) {
@@ -141,23 +148,28 @@ export class MetamaskSwap extends MetamaskSwapSetup {
             throw Error("Invalid amountFromTo config");
         }
     }
-    logAvailableRoutes(quotes) {
-        // let losses = [];
+    filterAvailableRoutes(quotes, failedDexes = []) {
+        let validRoutes = [];
         for (let i = 0; i < quotes.length; i++) {
             let initialAmount = quotes[i].priceSlippage.sourceAmountInUSD;
             let receiveAmount = quotes[i].priceSlippage.destinationAmountInUSD;
             let loss = initialAmount - receiveAmount;
-            if (loss.toFixed(6) == 0.0) {
-                // probably failed estimating, need to skip
-                continue;
+            // Metamask sometimes returns invalid transactions, which we need to filter out...
+            if (failedDexes.includes(quotes[i].aggregator)) continue;
+            if (quotes[i].error == null && quotes[i].trade != null) {
+                validRoutes.push(quotes[i]);
+                log(
+                    `DEX ${i + 1}/${quotes.length}`,
+                    randomChalk(
+                        `slippage: ${loss.toString().slice(0, 7)} USD | DEX: ${
+                            quotes[i].aggregator
+                        }`,
+                    ),
+                );
             }
-            // losses.push(loss);
-            log(
-                `DEX ${i + 1}/${quotes.length}`,
-                randomChalk(`slippage: ${loss.toFixed(6)} USD | DEX: ${quotes[i].aggregator}`),
-            );
         }
-        // losses = NumbersHelpers.sortArrayIncreasing(losses);
-        return quotes[0];
+        // log("previously failed dexes:", failedDexes);
+        // log("valid dexes", validRoutes.map((val) => val.aggregator));
+        return validRoutes[0];
     }
 }
