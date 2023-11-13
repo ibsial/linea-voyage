@@ -109,7 +109,7 @@ export class MetamaskSwap extends MetamaskSwapSetup {
                 `selected DEX: ${bestRoute.aggregator} | volume: ${bestRoute.priceSlippage.sourceAmountInUSD} USD`,
             ),
         );
-        return await this.swap(bestRoute.trade);
+        // return await this.swap(bestRoute.trade);
     }
     async getRandomAmount(tokenName = this.fromToken) {
         if (this.amountFromTo[0].includes("%") && this.amountFromTo[1].includes("%")) {
@@ -142,7 +142,7 @@ export class MetamaskSwap extends MetamaskSwapSetup {
         }
     }
     logAvailableRoutes(quotes) {
-        let losses = [];
+        // let losses = [];
         for (let i = 0; i < quotes.length; i++) {
             let initialAmount = quotes[i].priceSlippage.sourceAmountInUSD;
             let receiveAmount = quotes[i].priceSlippage.destinationAmountInUSD;
@@ -151,13 +151,13 @@ export class MetamaskSwap extends MetamaskSwapSetup {
                 // probably failed estimating, need to skip
                 continue;
             }
-            losses.push(loss);
+            // losses.push(loss);
             log(
                 `DEX ${i + 1}/${quotes.length}`,
                 randomChalk(`slippage: ${loss.toFixed(6)} USD | DEX: ${quotes[i].aggregator}`),
             );
         }
-        losses = NumbersHelpers.sortArrayIncreasing(losses);
-        return losses[0];
+        // losses = NumbersHelpers.sortArrayIncreasing(losses);
+        return quotes[0];
     }
 }
