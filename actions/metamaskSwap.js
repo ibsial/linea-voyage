@@ -109,7 +109,7 @@ export class MetamaskSwap extends MetamaskSwapSetup {
                 `selected DEX: ${bestRoute.aggregator} | volume: ${bestRoute.priceSlippage.sourceAmountInUSD} USD`,
             ),
         );
-        // return await this.swap(bestRoute.trade);
+        return await this.swap(bestRoute.trade);
     }
     async getRandomAmount(tokenName = this.fromToken) {
         if (this.amountFromTo[0].includes("%") && this.amountFromTo[1].includes("%")) {
