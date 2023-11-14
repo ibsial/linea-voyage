@@ -231,6 +231,12 @@ export async function defaultSleep(sec, needProgress = true) {
     }
     return await new Promise((resolve) => setTimeout(resolve, sec * 1000));
 }
+export async function delayedPrint(paste, delay = 0.033) {
+    for (let i = 0; i < paste.length; i++) {
+        process.stdout.write(paste[i])
+        await defaultSleep(delay, false)
+    }
+}
 export async function retry(fn, { retries = 0, retryInterval = 20 }, ...args) {
     if (retries >= max_retries) {
         console.log("retry limit exceeded, marking action as false");

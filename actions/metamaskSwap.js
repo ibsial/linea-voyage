@@ -50,7 +50,7 @@ export class MetamaskSwap extends MetamaskSwapSetup {
     }
     async executeRoute(tryCount = 0, failedDexes = []) {
         if (tryCount >= maxRetries) {
-            return lastStatus;
+            return { code: 0, data: "", log: `retry count exceeded` };
         }
         tryCount++;
         if (this.fromToken != chains[this.network].currency) {

@@ -1,8 +1,16 @@
 import { Wallet, ethers } from "ethers";
 import { MetamaskBridge } from "./actions/metamaskBridge.js";
 import { shuffleAndOverwriteKeys } from "./utils/accs.js";
-import { RandomHelpers, c, checkGwei, log, sleep } from "./utils/helpers.js";
-import { goodGwei, sleepFromTo } from "./config.js";
+import {
+    RandomHelpers,
+    c,
+    checkGwei,
+    delayedPrint,
+    log,
+    randomChalk,
+    sleep,
+} from "./utils/helpers.js";
+import { IntractSetup, goodGwei, sleepFromTo } from "./config.js";
 import { AskCli, settings } from "./base/ask.js";
 import { MetamaskSwap } from "./actions/metamaskSwap.js";
 import {
@@ -12,21 +20,38 @@ import {
     verifyTasksScenario,
 } from "./actions/interact.js";
 
+const author = "@findmeonchain";
 let privates = await shuffleAndOverwriteKeys();
-
 switch (settings.mode) {
     case "Bridge":
+        await delayedPrint(
+            randomChalk(
+                `Welcome, metamask bridger!\nThis guy is your flashlight on a dark road of crosschain travels:\n${c.bold(
+                    author,
+                )}`,
+            ),
+        );
         for (let i = 0; i < privates.length; i++) {
             await checkGwei(goodGwei);
             let signer = new Wallet(privates[i]);
             let metamask = new MetamaskBridge(signer);
             log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
             let res = await metamask.executeRoute();
-            // log(res?.log);
+            if (res.code <= 0) {
+                log(c.red(res.log));
+                continue;
+            }
             await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
         }
         break;
     case "Swap":
+        await delayedPrint(
+            randomChalk(
+                `Make sure this tricky fox doesn't bite you too much... \n${c.bold(
+                    author,
+                )} probably knows a safe route.`,
+            ),
+        );
         for (let i = 0; i < privates.length; i++) {
             await checkGwei(goodGwei);
             let signer = new Wallet(privates[i]);
@@ -34,21 +59,40 @@ switch (settings.mode) {
             log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
             let res = await metamask.executeRoute();
             // log(res?.log);
+            if (res.code <= 0) {
+                log(c.red(res.log));
+                continue;
+            }
             await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
         }
         break;
     case "Intract":
-        let interactSetup = {};
+        let intSet = new IntractSetup();
+        let interactSettings = {};
         const ask = new AskCli();
-        interactSetup.mode = await ask.askInteractMode();
-        if (interactSetup.mode == "verify" || interactSetup.mode == "claim") {
-            interactSetup.week = await ask.askIteractClaimWeek();
+        interactSettings.mode = await ask.askInteractMode();
+        if (interactSettings.mode == "verify" || interactSettings.mode == "claim") {
+            interactSettings.week = await ask.askIteractClaimWeek();
         }
-        log(interactSetup.mode)
+        intSet.useRefCode
+            ? await delayedPrint(
+                  c.ansi256(
+                      215,
+                      95,
+                      175,
+                  )(
+                      `${c.bold(
+                          author,
+                      )} thinks You're a beautiful person with a charming personality.\n`,
+                  ),
+              )
+            : await delayedPrint(
+                  randomChalk(`This platform is offchain, while ${c.bold(author)} isn't.\n`),
+              );
         for (let i = 0; i < privates.length; i++) {
             let signer = new Wallet(privates[i]);
             log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
-            switch (interactSetup.mode) {
+            switch (interactSettings.mode) {
                 case "register":
                     await registerScenario(signer);
                     break;
@@ -56,10 +100,10 @@ switch (settings.mode) {
                     await claimDailyPointsScenario(signer);
                     break;
                 case "verify":
-                    await verifyTasksScenario(signer, interactSetup.week);
-                    break
+                    await verifyTasksScenario(signer, interactSettings.week);
+                    break;
                 case "claim":
-                    await claimTasksScenario(signer, interactSetup.week);
+                    await claimTasksScenario(signer, interactSettings.week);
                     break;
             }
             await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
