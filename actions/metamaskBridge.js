@@ -29,7 +29,7 @@ export class MetamaskBridge extends MetamaskBridgeSetup {
         }
         tryCount++;
         let gasPrice = await getGasPrice(this.fromNetwork);
-        txData.gasPrice = gasPrice;
+        txData = { ...txData, ...gasPrice }
         try {
             let tx = await this.signer.sendTransaction(txData);
             log(c.green(chains[this.fromNetwork].explorer + tx.hash));
