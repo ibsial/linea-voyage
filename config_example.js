@@ -35,3 +35,7 @@ export class MetamaskSwapSetup {
     toToken = "USDC"
     amountFromTo = ["0.0027", "0.0033"] // numbers ["0.1", "0.2"] | percentage ["30%", "40%"]
 }
+
+export class IntractSetup {
+    useRefCode = true
+}

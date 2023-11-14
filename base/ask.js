@@ -17,8 +17,67 @@ class AskCli {
                         name: `Swap`,
                         value: 'Swap'
                     },
+                    {
+                        name: `Intract`,
+                        value: 'Intract'
+                    },
+
                 ],
                 default: 'Bridge',
+                loop: true
+            },
+        ]
+        const answers = await inquirer.prompt(questions)
+        return answers.mode
+    }
+    async askInteractMode() {
+        const questions = [
+            {
+                name: 'mode',
+                type: 'list',
+                message: `Choose interact mode`,
+                choices: [
+                    {
+                        name: `register`,
+                        value: 'register'
+                    },
+                    {
+                        name: `complete daily quests`,
+                        value: 'daily'
+                    },
+                    {
+                        name: `verify tasks`,
+                        value: 'verify'
+                    },
+                    {
+                        name: `claim points`,
+                        value: 'claim'
+                    },
+                ],
+                default: 'daily',
+                loop: true
+            },
+        ]
+        const answers = await inquirer.prompt(questions)
+        return answers.mode
+    }
+    async askIteractClaimWeek() {
+        const questions = [
+            {
+                name: 'mode',
+                type: 'list',
+                message: `Choose week to claim`,
+                choices: [
+                    {
+                        name: `week 1`,
+                        value: '1'
+                    },
+                    {
+                        name: `week 2`,
+                        value: '2'
+                    },
+                ],
+                default: '2',
                 loop: true
             },
         ]
