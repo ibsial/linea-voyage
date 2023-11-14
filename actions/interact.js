@@ -293,7 +293,7 @@ class Interact extends IntractSetup {
                     authorization: `Bearer ${authInfo.token}`,
                 },
             });
-            log(resp.data);
+            // log(resp.data);
             log(randomChalk(`current streak: ${resp.data.streakCount}`));
             return true;
         } catch (e) {
@@ -317,8 +317,8 @@ class Interact extends IntractSetup {
             );
             // log(quizResponse.data)
             console.log(
-                randomChalk(
-                    `Quiz completed at ${new Date(
+                randomChalk( quizResponse.data?.isFirstTimeMarked ? `Linea quiz completed for the first time` : 
+                    `Linea quiz completed at ${new Date(
                         quizResponse.data?.streakTimestamp,
                     ).toLocaleDateString()} ${new Date(
                         quizResponse.data?.streakTimestamp,
