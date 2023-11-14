@@ -208,7 +208,7 @@ class Interact extends IntractSetup {
             },
         });
     }
-    async verifyTask(token, payload, preconditiontaskIds) {
+    async verifyTask(token, payload, preconditiontaskIds, taskName = "") {
         try {
             let campaignInfo = await this.getCampaignInfo(token, payload.campaignId);
 
@@ -223,7 +223,7 @@ class Interact extends IntractSetup {
             }
 
             if (!isPreconditionsCompleted) {
-                log(c.red("Complete core tasks before verification"));
+                log(c.red(`[${taskName}] Complete core tasks before verification`));
                 return;
             }
 
@@ -294,7 +294,7 @@ class Interact extends IntractSetup {
                 },
             });
             // log(resp.data);
-            log(randomChalk(`current streak: ${resp.data.streakCount}`));
+            log(randomChalk(`current GM streak: ${resp.data.streakCount}`));
             return true;
         } catch (e) {
             /**
@@ -366,7 +366,7 @@ async function showStats(signer) {
     const lineaUserInfo = await interact.getLineaCampaignUserInfo(authInfo.token);
     log(
         randomChalk(
-            `${c.bold(signer.address)} | total XP: ${lineaUserInfo.totalXp} | current streak: ${
+            `${c.bold(signer.address)} | total XP: ${lineaUserInfo.totalXp} | current GM streak: ${
                 lineaUserInfo?.lineaStreak?.streakCount
             } | max streak: ${
                 lineaUserInfo?.lineaStreak?.longestStreakCount
@@ -446,13 +446,13 @@ async function verifyMetamaskBridge(signer) {
             questerWalletAddress: signer.address,
         },
     };
-    let verifyResp = await interact.verifyTask(authInfo.token, verifyPayload, []);
+    let verifyResp = await interact.verifyTask(authInfo.token, verifyPayload, [], "bridge");
     if (verifyResp) {
         log(c.green(verifyResp));
     } else {
         log(
             randomChalk(
-                `${signer.address} started verification, come back in some time to claim points`,
+                `[bridge] ${signer.address} started verification, come back in some time to claim points`,
             ),
         );
     }
@@ -537,13 +537,13 @@ async function verifyMetamaskSwap(signer) {
         },
     };
     const preconditiontaskIds = [lineaWeekInfo.week1.taskIds.bridge];
-    let verifyResp = await interact.verifyTask(authInfo.token, verifyPayload, preconditiontaskIds);
+    let verifyResp = await interact.verifyTask(authInfo.token, verifyPayload, preconditiontaskIds, "swap");
     if (verifyResp) {
         log(c.green(verifyResp));
     } else {
         log(
             randomChalk(
-                `${signer.address} started verification, come back in some time to claim points`,
+                `[swap] ${signer.address} started verification, come back in some time to claim points`,
             ),
         );
     }
