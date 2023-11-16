@@ -39,3 +39,14 @@ export class MetamaskSwapSetup {
 export class IntractSetup {
     useRefCode = true
 }
+export const ThirdPartyBridgeSetup = {
+    /* "Ethereum" | "Arbitrum" | "Optimism" | "Base" | "Linea" */
+    fromNetwork: "Arbitrum",
+    /* "Linea" */
+    toNetwork: "Linea",
+    /* "ETH" */
+    fromToken: "ETH",
+    /* "ETH" */
+    toToken: "ETH",
+    amountFromTo: ["0.013", "0.014"],
+}
