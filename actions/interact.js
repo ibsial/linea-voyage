@@ -1,5 +1,5 @@
 import axios from "axios";
-import { log, defaultSleep, c, randomChalk } from "../utils/helpers.js";
+import { log, defaultSleep, c, randomChalk, RandomHelpers } from "../utils/helpers.js";
 import { IntractSetup } from "../config.js";
 const refInfo = {
     referralCode: "uwO-g_",
@@ -17,14 +17,17 @@ const lineaWeekInfo = {
     week2: {
         id: "65535ae63cd33ebafe9d68f8",
         taskIds: {
-            bridgeCore: "",
-            bridgeMany: "",
-            bridge500: "",
-            bridge1000: "",
-            postReview: "",
+            bridgeCore: "65535ae63cd33ebafe9d68f9",
+            bridgeMany: "65535ae63cd33ebafe9d6900",
+            bridge500: "65535ae63cd33ebafe9d68fb",
+            bridge1000: "65535ae63cd33ebafe9d68fd",
+            postReview: "65535ae63cd33ebafe9d68ff",
         },
     },
 };
+/*
+    thanks to https://github.com/tridetch/chain-abuzer
+*/
 class Interact extends IntractSetup {
     baseUrl = `https://api.intract.io/api/qv1`;
     signer;
@@ -253,11 +256,11 @@ class Interact extends IntractSetup {
             let campaignInfo = await this.getCampaignInfo(token, campaignId);
             const completedTask = campaignInfo.events.find((e) => e.taskId == taskId);
             if (!completedTask) {
-                log(c.red(`Task "${taskName}" is not completed, try verifying again`));
+                log(c.red(`Task [${taskName}] is not completed, try verifying again`));
                 return false;
             }
             if (completedTask.isXpClaimed) {
-                log(c.green(`Task "${taskName}" already claimed`));
+                log(c.green(`Task [${taskName}] already claimed`));
                 return true;
             } else {
                 let getLineaCampaingUserResponse = await this.getLineaCampaignUserInfo(token);
@@ -275,7 +278,7 @@ class Interact extends IntractSetup {
                     },
                 );
                 console.log(
-                    `Task "${taskName}" claimed +${claimResponse.data.claimDetails[0].xp} XP earned!`,
+                    `[${taskName}] claimed +${claimResponse.data.claimDetails[0].xp} XP earned!`,
                 );
                 return true;
             }
@@ -317,14 +320,16 @@ class Interact extends IntractSetup {
             );
             // log(quizResponse.data)
             console.log(
-                randomChalk( quizResponse.data?.isFirstTimeMarked ? `Linea quiz completed for the first time` : 
-                    `Linea quiz completed at ${new Date(
-                        quizResponse.data?.streakTimestamp,
-                    ).toLocaleDateString()} ${new Date(
-                        quizResponse.data?.streakTimestamp,
-                    ).toLocaleTimeString()} | current streak: ${
-                        quizResponse.data?.streakCount
-                    } | max streak: ${quizResponse.data?.longestStreakCount}`,
+                randomChalk(
+                    !quizResponse.data?.streakCount
+                        ? `Linea quiz completed for the first time`
+                        : `Linea quiz completed at ${new Date(
+                              quizResponse.data?.streakTimestamp,
+                          ).toLocaleDateString()} ${new Date(
+                              quizResponse.data?.streakTimestamp,
+                          ).toLocaleTimeString()} | current streak: ${
+                              quizResponse.data?.streakCount
+                          } | max streak: ${quizResponse.data?.longestStreakCount}`,
                 ),
             );
         } catch (e) {
@@ -378,6 +383,9 @@ async function showStats(signer) {
         ),
     );
 }
+/*********************************************/
+/**************** Week 1 ********************/
+/*********************************************/
 
 async function verifyMetamaskBridge(signer) {
     const interact = new Interact(signer);
@@ -537,7 +545,12 @@ async function verifyMetamaskSwap(signer) {
         },
     };
     const preconditiontaskIds = [lineaWeekInfo.week1.taskIds.bridge];
-    let verifyResp = await interact.verifyTask(authInfo.token, verifyPayload, preconditiontaskIds, "swap");
+    let verifyResp = await interact.verifyTask(
+        authInfo.token,
+        verifyPayload,
+        preconditiontaskIds,
+        "swap",
+    );
     if (verifyResp) {
         log(c.green(verifyResp));
     } else {
@@ -555,6 +568,477 @@ async function claimMetamaskSwap(signer) {
     const taskId = lineaWeekInfo.week1.taskIds.swap;
     let claimResp = await interact.claimTask(authInfo.token, camplaignId, taskId, "metamask swap");
 }
+/*********************************************/
+/**************** Week 2 ********************/
+/*********************************************/
+
+async function verifyCoreBridge(signer) {
+    const interact = new Interact(signer);
+    const authInfo = await interact.login();
+    const verifyPayload = {
+        campaignId: "65535ae63cd33ebafe9d68f8",
+        userInputs: { lineaProjectId: "653aa0a76e3c9704874cdd31", TRANSACTION_HASH: "0x" },
+        task: {
+            userInputs: {
+                initiateButton: { isExist: false },
+                verifyButton: {
+                    label: "Verify",
+                    callbackFunction: true,
+                    callbackParameters: [
+                        { source: "ADMIN_INPUT_FIELD", key: "LINEA_BRIDGE_AMOUNT" },
+                        { source: "CLIENT_VERIFICATION_OBJECT", key: "questerWalletAddress" },
+                        { source: "CLIENT_VERIFICATION_OBJECT", key: "lineaProjectId" },
+                    ],
+                },
+                dynamicInputs: [],
+            },
+            asyncVerifyConfig: {
+                isAsyncVerify: true,
+                verifyTimeInSeconds: 2700,
+                maxRetryCount: 3,
+                retryTimeInSeconds: 1500,
+                isScatterEnabled: false,
+                maxScatterInSeconds: 0,
+            },
+            powVerifyConfig: { isPOWVerify: false },
+            recurrenceConfig: { isRecurring: false, frequencyInDays: 1, maxRecurrenceCount: 1 },
+            flashTaskConfig: { isFlashTask: false },
+            name: "Linea Bridge ETH Amount",
+            description:
+                "Select any listed bridge partner dapp and bridge at least $25 worth of ETH from another network to Linea.",
+            templateType: "LineaBridgeEthAmount",
+            xp: 100,
+            adminInputs: [
+                {
+                    key: "LINEA_BRIDGE_AMOUNT",
+                    inputType: "INPUT_NUMBER",
+                    label: "Bridge Amount",
+                    placeholder: "",
+                    value: 20,
+                    _id: "65535ae63cd33ebafe9d68fa",
+                },
+            ],
+            isAttributionTask: true,
+            templateFamily: "LINEA/WEEK1",
+            totalUsersCompleted: 0,
+            totalRecurringUsersCompleted: [],
+            requiredLogins: ["EVMWallet"],
+            isIntractTask: false,
+            isRequiredTask: true,
+            showOnChainHelper: false,
+            hasMaxRetryCheck: false,
+            hasRateLimitCheck: false,
+            isAddedLater: false,
+            isVisible: true,
+            isDeleted: false,
+            _id: "65535ae63cd33ebafe9d68f9",
+        },
+        verificationObject: {
+            lineaProjectId: "653aa0a76e3c9704874cdd31",
+            questerWalletAddress: signer.address,
+        },
+    };
+    let verifyResp = await interact.verifyTask(authInfo.token, verifyPayload, [], "week2 bridge");
+    if (verifyResp) {
+        log(c.green(verifyResp));
+    } else {
+        log(
+            randomChalk(
+                `[week2 bridge] ${signer.address} started verification, come back in some time to claim points`,
+            ),
+        );
+    }
+}
+async function claimCoreBridge(signer) {
+    const interact = new Interact(signer);
+    const authInfo = await interact.login();
+    const camplaignId = lineaWeekInfo.week2.id;
+    const taskId = lineaWeekInfo.week2.taskIds.bridgeCore;
+    let claimResp = await interact.claimTask(authInfo.token, camplaignId, taskId, "week2 bridge");
+}
+async function verifyBonusBridge(signer) {
+    const interact = new Interact(signer);
+    const authInfo = await interact.login();
+    const verifyPayload = {
+        campaignId: "65535ae63cd33ebafe9d68f8",
+        userInputs: { lineaProjectId: "653aa0a76e3c9704874cdd31", TRANSACTION_HASH: "0x" },
+        task: {
+            userInputs: {
+                initiateButton: { isExist: false },
+                verifyButton: {
+                    label: "Verify",
+                    callbackFunction: true,
+                    callbackParameters: [
+                        { source: "ADMIN_INPUT_FIELD", key: "LINEA_BRIDGE_AMOUNT" },
+                        { source: "CLIENT_VERIFICATION_OBJECT", key: "questerWalletAddress" },
+                        { source: "ADMIN_INPUT_FIELD", key: "LINEA_PROJECT_ID" },
+                    ],
+                },
+                dynamicInputs: [],
+            },
+            asyncVerifyConfig: {
+                isAsyncVerify: true,
+                verifyTimeInSeconds: 1800,
+                maxRetryCount: 3,
+                retryTimeInSeconds: 600,
+                isScatterEnabled: false,
+                maxScatterInSeconds: 0,
+            },
+            powVerifyConfig: { isPOWVerify: false },
+            recurrenceConfig: { isRecurring: false, frequencyInDays: 1, maxRecurrenceCount: 1 },
+            flashTaskConfig: { isFlashTask: false },
+            name: "Bridge $25 on ORBITER to Linea",
+            description: "Bridge $25 on ORBITER to Linea",
+            templateType: "LineaBridgeMultipleProject",
+            xp: 5,
+            adminInputs: [
+                {
+                    key: "LINEA_BRIDGE_AMOUNT",
+                    inputType: "INPUT_NUMBER",
+                    label: "Bridge Amount for multiple",
+                    placeholder: "",
+                    value: 20,
+                    _id: "65535ae63cd33ebafe9d690a",
+                },
+                {
+                    key: "LINEA_PROJECT_ID",
+                    inputType: "INPUT_STRING",
+                    label: "Linea Project Id",
+                    placeholder: "",
+                    value: "653aa0a76e3c9704874cdd31",
+                    _id: "65535ae63cd33ebafe9d690b",
+                },
+            ],
+            isAttributionTask: true,
+            templateFamily: "LINEA/WEEK1",
+            totalUsersCompleted: 184,
+            totalRecurringUsersCompleted: [],
+            requiredLogins: ["EVMWallet"],
+            isIntractTask: false,
+            isRequiredTask: false,
+            showOnChainHelper: false,
+            hasMaxRetryCheck: false,
+            hasRateLimitCheck: false,
+            isAddedLater: false,
+            isVisible: true,
+            isDeleted: false,
+            _id: lineaWeekInfo.week2.taskIds.bridgeMany,
+        },
+        verificationObject: {
+            lineaProjectId: "653aa0a76e3c9704874cdd31",
+            questerWalletAddress: signer.address,
+        },
+    };
+    let verifyResp = await interact.verifyTask(
+        authInfo.token,
+        verifyPayload,
+        [],
+        "week2 bonus bridge",
+    );
+    if (verifyResp) {
+        log(c.green(verifyResp));
+    } else {
+        log(
+            randomChalk(
+                `[week2 bonus bridge] ${signer.address} started verification, come back in some time to claim points`,
+            ),
+        );
+    }
+}
+async function claimBonusBridge(signer) {
+    const interact = new Interact(signer);
+    const authInfo = await interact.login();
+    const camplaignId = lineaWeekInfo.week2.id;
+    const taskId = lineaWeekInfo.week2.taskIds.bridgeMany;
+    let claimResp = await interact.claimTask(
+        authInfo.token,
+        camplaignId,
+        taskId,
+        "week2 bonus bridge",
+    );
+}
+async function verify500Bridge(signer) {
+    const interact = new Interact(signer);
+    const authInfo = await interact.login();
+    const verifyPayload = {
+        campaignId: "65535ae63cd33ebafe9d68f8",
+        userInputs: { lineaProjectId: "653aa0a76e3c9704874cdd31", TRANSACTION_HASH: "0x" },
+        task: {
+            userInputs: {
+                initiateButton: { isExist: false },
+                verifyButton: {
+                    label: "Verify",
+                    callbackFunction: true,
+                    callbackParameters: [
+                        { source: "ADMIN_INPUT_FIELD", key: "LINEA_BRIDGE_AMOUNT" },
+                        { source: "CLIENT_VERIFICATION_OBJECT", key: "questerWalletAddress" },
+                        { source: "CLIENT_VERIFICATION_OBJECT", key: "lineaProjectId" },
+                    ],
+                },
+                dynamicInputs: [],
+            },
+            asyncVerifyConfig: {
+                isAsyncVerify: true,
+                verifyTimeInSeconds: 1800,
+                maxRetryCount: 3,
+                retryTimeInSeconds: 600,
+                isScatterEnabled: false,
+                maxScatterInSeconds: 0,
+            },
+            powVerifyConfig: { isPOWVerify: false },
+            recurrenceConfig: { isRecurring: false, frequencyInDays: 1, maxRecurrenceCount: 1 },
+            flashTaskConfig: { isFlashTask: false },
+            name: "Linea Bridge Eth Amount",
+            description: "Bridge more than $500 worth of ETH in a single transaction to Linea.",
+            templateType: "LineaBridgeEthAmount",
+            xp: 50,
+            adminInputs: [
+                {
+                    key: "LINEA_BRIDGE_AMOUNT",
+                    inputType: "INPUT_NUMBER",
+                    label: "Bridge Amount",
+                    placeholder: "",
+                    value: 450,
+                    _id: "65535ae63cd33ebafe9d68fc",
+                },
+            ],
+            isAttributionTask: true,
+            templateFamily: "LINEA/WEEK1",
+            totalUsersCompleted: 738,
+            totalRecurringUsersCompleted: [],
+            requiredLogins: ["EVMWallet"],
+            isIntractTask: false,
+            isRequiredTask: false,
+            showOnChainHelper: false,
+            hasMaxRetryCheck: false,
+            hasRateLimitCheck: false,
+            isAddedLater: false,
+            isVisible: true,
+            isDeleted: false,
+            _id: "65535ae63cd33ebafe9d68fb",
+        },
+        verificationObject: {
+            lineaProjectId: "653aa0a76e3c9704874cdd31",
+            questerWalletAddress: signer.address,
+        },
+    };
+    let verifyResp = await interact.verifyTask(
+        authInfo.token,
+        verifyPayload,
+        [lineaWeekInfo.week2.taskIds.bridgeCore],
+        "week2 $500 bridge",
+    );
+    if (verifyResp) {
+        log(c.green(verifyResp));
+    } else {
+        log(
+            randomChalk(
+                `[week2 $500 bridge] ${signer.address} started verification, come back in some time to claim points`,
+            ),
+        );
+    }
+}
+async function claim500Bridge(signer) {
+    const interact = new Interact(signer);
+    const authInfo = await interact.login();
+    const camplaignId = lineaWeekInfo.week2.id;
+    const taskId = lineaWeekInfo.week2.taskIds.bridge500;
+    let claimResp = await interact.claimTask(
+        authInfo.token,
+        camplaignId,
+        taskId,
+        "week2 $500 bridge",
+    );
+}
+async function verify1000Bridge(signer) {
+    const interact = new Interact(signer);
+    const authInfo = await interact.login();
+    const verifyPayload = {
+        campaignId: "65535ae63cd33ebafe9d68f8",
+        userInputs: {
+            lineaProjectId: "653aa0a76e3c9704874cdd31",
+            lineaProjectIds: [],
+            TRANSACTION_HASH: "0x",
+        },
+        task: {
+            userInputs: {
+                initiateButton: { isExist: false },
+                verifyButton: {
+                    label: "Verify",
+                    callbackFunction: true,
+                    callbackParameters: [
+                        { source: "ADMIN_INPUT_FIELD", key: "LINEA_BRIDGE_AMOUNT" },
+                        { source: "CLIENT_VERIFICATION_OBJECT", key: "questerWalletAddress" },
+                        { source: "CLIENT_VERIFICATION_OBJECT", key: "lineaProjectIds" },
+                    ],
+                },
+                dynamicInputs: [],
+            },
+            asyncVerifyConfig: {
+                isAsyncVerify: true,
+                verifyTimeInSeconds: 1800,
+                maxRetryCount: 3,
+                retryTimeInSeconds: 600,
+                isScatterEnabled: false,
+                maxScatterInSeconds: 0,
+            },
+            powVerifyConfig: { isPOWVerify: false },
+            recurrenceConfig: { isRecurring: false, frequencyInDays: 1, maxRecurrenceCount: 1 },
+            flashTaskConfig: { isFlashTask: false },
+            name: "Linea Bridge Eth Amount",
+            description:
+                "Bridge more than $1000 in ETH (in total across the listed bridges) to Linea.",
+            templateType: "LineaBridgeVolume",
+            xp: 75,
+            adminInputs: [
+                {
+                    key: "LINEA_BRIDGE_AMOUNT",
+                    inputType: "INPUT_NUMBER",
+                    label: "Total Bridge Amount",
+                    placeholder: "",
+                    value: 900,
+                    _id: "65535ae63cd33ebafe9d68fe",
+                },
+            ],
+            isAttributionTask: true,
+            templateFamily: "LINEA/WEEK1",
+            totalUsersCompleted: 695,
+            totalRecurringUsersCompleted: [],
+            requiredLogins: ["EVMWallet"],
+            isIntractTask: false,
+            isRequiredTask: false,
+            showOnChainHelper: false,
+            hasMaxRetryCheck: false,
+            hasRateLimitCheck: false,
+            isAddedLater: false,
+            isVisible: true,
+            isDeleted: false,
+            _id: "65535ae63cd33ebafe9d68fd",
+        },
+        verificationObject: {
+            lineaProjectId: "653aa0a76e3c9704874cdd31",
+            lineaProjectIds: [],
+            questerWalletAddress: signer.address,
+        },
+    };
+    let verifyResp = await interact.verifyTask(
+        authInfo.token,
+        verifyPayload,
+        [lineaWeekInfo.week2.taskIds.bridge1000],
+        "week2 $1000 bridge",
+    );
+    if (verifyResp) {
+        log(c.green(verifyResp));
+    } else {
+        log(
+            randomChalk(
+                `[week2 $1000 bridge] ${signer.address} started verification, come back in some time to claim points`,
+            ),
+        );
+    }
+}
+async function claim1000Bridge(signer) {
+    const interact = new Interact(signer);
+    const authInfo = await interact.login();
+    const camplaignId = lineaWeekInfo.week2.id;
+    const taskId = lineaWeekInfo.week2.taskIds.bridge1000;
+    let claimResp = await interact.claimTask(
+        authInfo.token,
+        camplaignId,
+        taskId,
+        "week2 $1000 bridge",
+    );
+}
+export async function doReview(signer) {
+    try {
+        const result = await axios.post("https://dappsheriff.com/api/app/127/reviews", {
+            app_id: 0,
+            reviewer: signer.address,
+            review: RandomHelpers.getRandomSentence(),
+            rate: 5,
+        });
+        console.log(`Review has been submitted`);
+    } catch (e) {
+        log(e.message);
+        await defaultSleep(5);
+        return await doReview(signer);
+    }
+}
+async function verifyWeek2Review(signer) {
+    const interact = new Interact(signer);
+    const authInfo = await interact.login();
+    const verifyPayload = {
+        campaignId: "65535ae63cd33ebafe9d68f8",
+        userInputs: { TRANSACTION_HASH: "0x" },
+        task: {
+            userInputs: {
+                initiateButton: {
+                    label: "Write a review!",
+                    baseLink: "https://dappsheriff.com/",
+                    isExist: true,
+                },
+                verifyButton: { label: "Verify", callbackFunction: true, callbackParameters: [] },
+                dynamicInputs: [],
+            },
+            asyncVerifyConfig: {
+                isAsyncVerify: true,
+                verifyTimeInSeconds: 120,
+                maxRetryCount: 3,
+                retryTimeInSeconds: 60,
+                isScatterEnabled: false,
+                maxScatterInSeconds: 0,
+            },
+            powVerifyConfig: { isPOWVerify: false },
+            recurrenceConfig: { isRecurring: false, frequencyInDays: 1, maxRecurrenceCount: 1 },
+            flashTaskConfig: { isFlashTask: false },
+            name: "Review your favorite dapp of the Bridge wave on DappSheriff (for 20XP)",
+            description: "Verify that you added review on Dapsheriff",
+            templateType: "DappSheriffReview",
+            xp: 20,
+            adminInputs: [],
+            isAttributionTask: true,
+            templateFamily: "LINEA/WEEK1",
+            totalUsersCompleted: 2007,
+            totalRecurringUsersCompleted: [],
+            requiredLogins: ["EVMWallet"],
+            isIntractTask: false,
+            isRequiredTask: false,
+            showOnChainHelper: false,
+            hasMaxRetryCheck: false,
+            hasRateLimitCheck: false,
+            isAddedLater: false,
+            isVisible: true,
+            isDeleted: false,
+            _id: lineaWeekInfo.week2.taskIds.postReview,
+        },
+        verificationObject: {
+            questerWalletAddress: signer.address,
+        },
+    };
+    const preconditiontaskIds = [lineaWeekInfo.week2.taskIds.bridgeCore];
+    let verifyResp = await interact.verifyTask(
+        authInfo.token,
+        verifyPayload,
+        preconditiontaskIds,
+        "[review]",
+    );
+    if (verifyResp) {
+        log(c.green(verifyResp));
+    } else {
+        log(
+            randomChalk(
+                `[review] ${signer.address} started verification, come back in some time to claim points`,
+            ),
+        );
+    }
+}
+export async function claimWeek2Review(signer) {
+    const campaignId = lineaWeekInfo.week2.id;
+    const taskId = lineaWeekInfo.week2.taskIds.postReview;
+    const interact = new Interact(signer);
+    const authInfo = await interact.login();
+    await interact.claimTask(authInfo.token, campaignId, taskId, "Review task");
+}
 
 export async function registerScenario(signer) {
     await setWallet(signer);
@@ -564,13 +1048,24 @@ export async function claimDailyPointsScenario(signer) {
     await dailyLineaQuiz(signer);
 }
 export async function logStatsScenario(signer) {
-    await showStats(signer)
+    await showStats(signer);
 }
+
 export async function verifyTasksScenario(signer, week) {
     switch (week) {
         case "1":
             await verifyMetamaskBridge(signer);
             await verifyMetamaskSwap(signer);
+        case "2":
+            await verifyCoreBridge(signer);
+            await defaultSleep(3);
+            await verifyBonusBridge(signer);
+            await defaultSleep(3);
+            await verify500Bridge(signer);
+            await defaultSleep(3);
+            await verify1000Bridge(signer);
+            await defaultSleep(3);
+            await verifyWeek2Review(signer);
     }
 }
 export async function claimTasksScenario(signer, week) {
@@ -578,5 +1073,15 @@ export async function claimTasksScenario(signer, week) {
         case "1":
             await claimMetamaskBridge(signer);
             await claimMetamaskSwap(signer);
+        case "2":
+            await claimCoreBridge(signer);
+            await defaultSleep(3);
+            await claimBonusBridge(signer);
+            await defaultSleep(3);
+            await claim500Bridge(signer);
+            await defaultSleep(3);
+            await claim1000Bridge(signer);
+            await defaultSleep(3);
+            await claimWeek2Review(signer);
     }
 }

@@ -3,7 +3,7 @@ import { formatUnits, parseUnits, ethers, Wallet, JsonRpcProvider } from "ethers
 import chalk from "chalk";
 import { SingleBar, Presets } from "cli-progress";
 import { chains } from "./chainData.js";
-import { gasPricePreset } from "../config.js";
+import { gasPricePreset, maxRetries } from "../config.js";
 import axios from "axios";
 export const c = chalk;
 export const randomChalk = (line) => {
@@ -77,6 +77,26 @@ class Random {
     chooseElementFromArray(array) {
         return array[Math.floor(Math.random() * array.length)];
     }
+    getRandomSentence() {
+        const len = Math.round(Math.random() * 4 + 1);
+        const words = [
+            "great",
+            "good",
+            "awesome",
+            "project",
+            "job",
+            "devs",
+            "strong",
+            "cool",
+            "webiste",
+            "platform",
+        ];
+        let sentence;
+        for (let i = 0; i < len; i++) {
+            sentence += words[Math.random() * words.length];
+        }
+        return sentence;
+    }
 }
 export const RandomHelpers = new Random();
 
@@ -147,6 +167,19 @@ export async function getGasPrice(networkName) {
         let provider = new JsonRpcProvider(chains[networkName].rpc);
         return { gasPrice: (await provider.getFeeData()).gasPrice };
     }
+}
+export async function getNativeBalance(signer, networkName) {
+    const provider = new JsonRpcProvider(chains[networkName].rpc);
+    const nativeBalanceGetter = async () => {
+        try {
+            return await provider.getBalance(signer.address);
+        } catch (e) {
+            log(e.message);
+            await defaultSleep(5);
+            return await nativeBalanceGetter();
+        }
+    };
+    return await nativeBalanceGetter();
 }
 export async function checkGwei(goodGwei) {
     let ts = new Date();
@@ -233,12 +266,12 @@ export async function defaultSleep(sec, needProgress = true) {
 }
 export async function delayedPrint(paste, delay = 0.033) {
     for (let i = 0; i < paste.length; i++) {
-        process.stdout.write(paste[i])
-        await defaultSleep(delay, false)
+        process.stdout.write(paste[i]);
+        await defaultSleep(delay, false);
     }
 }
 export async function retry(fn, { retries = 0, retryInterval = 20 }, ...args) {
-    if (retries >= max_retries) {
+    if (retries >= maxRetries) {
         console.log("retry limit exceeded, marking action as false");
         return false;
     }

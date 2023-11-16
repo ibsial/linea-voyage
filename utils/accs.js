@@ -4,7 +4,7 @@ import * as readline from "readline";
 import * as stream from "stream";
 import { once } from "events";
 import { ethers } from "ethers";
-import { RandomHelpers, sleep } from "./helpers.js";
+import { RandomHelpers, defaultSleep, sleep } from "./helpers.js";
 
 const __dirname = path.resolve();
 
@@ -38,6 +38,7 @@ export async function shuffleAndOverwriteKeys() {
     let newPrivates = RandomHelpers.shuffleArray(privates);
     await writeToFile("privates.txt", newPrivates.join("\n"));
     console.log(`shuffled ${privates.length} private keys successfully!`);
+    await defaultSleep(3);
     return newPrivates;
 }
 export const appendResultsToFile = async (file, data) => {

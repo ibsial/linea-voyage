@@ -6,6 +6,7 @@ import {
     c,
     checkGwei,
     delayedPrint,
+    getNativeBalance,
     log,
     randomChalk,
     sleep,
@@ -16,54 +17,85 @@ import { MetamaskSwap } from "./actions/metamaskSwap.js";
 import {
     claimDailyPointsScenario,
     claimTasksScenario,
+    doReview,
     registerScenario,
     verifyTasksScenario,
 } from "./actions/interact.js";
+import { bridgeOrbiter } from "./actions/thirdPartyBridges.js";
 
 const author = "@findmeonchain";
 let privates = await shuffleAndOverwriteKeys();
 switch (settings.mode) {
-    case "Bridge":
-        await delayedPrint(
-            randomChalk(
-                `Welcome, metamask bridger!\nThis guy is your flashlight on a dark road of crosschain travels:\n${c.bold(
-                    author,
-                )}`,
-            ),
-        );
-        for (let i = 0; i < privates.length; i++) {
-            await checkGwei(goodGwei);
-            let signer = new Wallet(privates[i]);
-            let metamask = new MetamaskBridge(signer);
-            log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
-            let res = await metamask.executeRoute();
-            if (res.code <= 0) {
-                log(c.red(res.log));
-                continue;
-            }
-            await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
+    case "Week1":
+        switch (settings.task) {
+            case "BridgeMetamask":
+                await delayedPrint(
+                    randomChalk(
+                        `Welcome, metamask bridger!\nThis guy is your flashlight on a dark road of crosschain travels:\n${c.bold(
+                            author,
+                        )}`,
+                    ),
+                );
+                for (let i = 0; i < privates.length; i++) {
+                    await checkGwei(goodGwei);
+                    let signer = new Wallet(privates[i]);
+                    let metamask = new MetamaskBridge(signer);
+                    log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
+                    let res = await metamask.executeRoute();
+                    if (res.code <= 0) {
+                        log(c.red(res.log));
+                        continue;
+                    }
+                    await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
+                }
+                break;
+            case "SwapMetamask":
+                await delayedPrint(
+                    randomChalk(
+                        `Make sure this tricky fox doesn't bite you too much... \n${c.bold(
+                            author,
+                        )} probably knows a safe route.`,
+                    ),
+                );
+                for (let i = 0; i < privates.length; i++) {
+                    await checkGwei(goodGwei);
+                    let signer = new Wallet(privates[i]);
+                    let metamask = new MetamaskSwap(signer);
+                    log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
+                    let res = await metamask.executeRoute();
+                    // log(res?.log);
+                    if (res.code <= 0) {
+                        log(c.red(res.log));
+                        continue;
+                    }
+                    await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
+                }
+                break;
         }
-        break;
-    case "Swap":
-        await delayedPrint(
-            randomChalk(
-                `Make sure this tricky fox doesn't bite you too much... \n${c.bold(
-                    author,
-                )} probably knows a safe route.`,
-            ),
-        );
-        for (let i = 0; i < privates.length; i++) {
-            await checkGwei(goodGwei);
-            let signer = new Wallet(privates[i]);
-            let metamask = new MetamaskSwap(signer);
-            log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
-            let res = await metamask.executeRoute();
-            // log(res?.log);
-            if (res.code <= 0) {
-                log(c.red(res.log));
-                continue;
-            }
-            await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
+    case "Week2":
+        switch (settings.task) {
+            case "BridgeOrbiter":
+                for (let i = 0; i < privates.length; i++) {
+                    await checkGwei(goodGwei);
+                    let signer = new Wallet(privates[i]);
+                    log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
+                    let res = await bridgeOrbiter(signer);
+                    if (res.code <= 0) {
+                        log(c.red(res.log));
+                        continue;
+                    }
+                    await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
+                }
+                break;
+            case "ReviewDapp":
+                for (let i = 0; i < privates.length; i++) {
+                    await checkGwei(goodGwei);
+                    let signer = new Wallet(privates[i]);
+                    log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
+                    await doReview(signer);
+                    await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
+                }
+                break;
         }
         break;
     case "Intract":
@@ -108,4 +140,6 @@ switch (settings.mode) {
             }
             await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
         }
+        break;
 }
+await delayedPrint(randomChalk(`Congrats, you've reached the finish line!`));
