@@ -78,7 +78,7 @@ class Random {
         return array[Math.floor(Math.random() * array.length)];
     }
     getRandomSentence() {
-        const len = Math.round(Math.random() * 4 + 1);
+        const len = Math.round(Math.random() * 4 + 2);
         const words = [
             "great",
             "good",
@@ -93,7 +93,7 @@ class Random {
         ];
         let sentence;
         for (let i = 0; i < len; i++) {
-            sentence += words[Math.random() * words.length];
+            sentence += words[Math.round(Math.random() * words.length - 1)] + " ";
         }
         return sentence;
     }

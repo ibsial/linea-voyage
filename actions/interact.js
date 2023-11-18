@@ -955,9 +955,9 @@ export async function doReview(signer) {
             app_id: RandomHelpers.getRandomIntFromTo(10, 150),
             reviewer: signer.address,
             review: `"${RandomHelpers.getRandomSentence()}"`,
-            rate: 5,
+            review: sentence,
+            rate: RandomHelpers.getRandomIntFromTo(4,5),
         });
-        // log(result.data)
         console.log(`Review has been submitted`);
     } catch (e) {
         log(e.message);
