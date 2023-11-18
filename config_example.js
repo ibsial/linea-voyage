@@ -2,6 +2,7 @@ export const maxRetries = 3
 export const sleepFromTo = [5 * 60, 10 * 60]
 export const gasPricePreset = "low" // "low" | "medium" | "high"
 export const goodGwei = "25"
+export const shuffleWallets = true // | false
 
 export class MetamaskBridgeSetup {
     /* "Ethereum" | "Arbitrum" | "Optimism" | "Base" | "Linea" */

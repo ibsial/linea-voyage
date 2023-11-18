@@ -5,6 +5,7 @@ import * as stream from "stream";
 import { once } from "events";
 import { ethers } from "ethers";
 import { RandomHelpers, defaultSleep, sleep } from "./helpers.js";
+import { shuffleWallets } from "../config.js";
 
 const __dirname = path.resolve();
 
@@ -35,11 +36,14 @@ export const getWallets = async () => {
 };
 export async function shuffleAndOverwriteKeys() {
     let privates = await getWallets();
-    let newPrivates = RandomHelpers.shuffleArray(privates);
-    await writeToFile("privates.txt", newPrivates.join("\n"));
-    console.log(`shuffled ${privates.length} private keys successfully!`);
-    await defaultSleep(3);
-    return newPrivates;
+    if (shuffleWallets) {
+        let newPrivates = RandomHelpers.shuffleArray(privates);
+        await writeToFile("privates.txt", newPrivates.join("\n"));
+        console.log(`shuffled ${privates.length} private keys successfully!`);
+        await defaultSleep(3);
+        return newPrivates;
+    }
+    return privates;
 }
 export const appendResultsToFile = async (file, data) => {
     fs.appendFile(`./${file}`, data + "\n", (err) => {
