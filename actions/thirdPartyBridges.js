@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { ThirdPartyBridgeSetup, maxRetries } from "../config.js";
-import { RandomHelpers, c, getGasPrice, getNativeBalance, log } from "../utils/helpers.js";
+import { RandomHelpers, c, defaultSleep, getGasPrice, getNativeBalance, log, transactionPassed } from "../utils/helpers.js";
 import { chains } from "../utils/chainData.js";
 
 const ORBITER_ADDRESS = "0x80C67432656d59144cEFf962E8fAF8926599bCF8";
