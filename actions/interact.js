@@ -952,11 +952,12 @@ async function claim1000Bridge(signer) {
 export async function doReview(signer) {
     try {
         const result = await axios.post("https://dappsheriff.com/api/app/127/reviews", {
-            app_id: 0,
+            app_id: RandomHelpers.getRandomIntFromTo(10, 150),
             reviewer: signer.address,
-            review: RandomHelpers.getRandomSentence(),
+            review: `"${RandomHelpers.getRandomSentence()}"`,
             rate: 5,
         });
+        // log(result.data)
         console.log(`Review has been submitted`);
     } catch (e) {
         log(e.message);
