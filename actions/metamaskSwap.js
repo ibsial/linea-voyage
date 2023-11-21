@@ -19,9 +19,16 @@ import { WEb3Wrapper } from "../base/web3Wrapper.js";
 export class MetamaskSwap extends MetamaskSwapSetup {
     baseUrl;
     signer;
-    constructor(signer) {
+    constructor(signer, proxy = undefined) {
         super();
-        this.axiosInstance = axios.create();
+        if (proxy) {
+            this.axiosInstance = axios.create({
+                httpAgent: new HttpsProxyAgent("http://" + proxy),
+                httpsAgent: new HttpsProxyAgent("http://" + proxy),
+            });
+        } else {
+            this.axiosInstance = axios.create({});
+        }
         this.signer = signer;
         let provider = new JsonRpcProvider(chains[this.network].rpc);
         this.signer = this.signer.connect(provider);

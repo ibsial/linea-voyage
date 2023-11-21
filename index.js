@@ -1,6 +1,6 @@
 import { Wallet, ethers } from "ethers";
 import { MetamaskBridge } from "./actions/metamaskBridge.js";
-import { shuffleAndOverwriteKeys } from "./utils/accs.js";
+import { getProxies, shuffleAndOverwriteKeys } from "./utils/accs.js";
 import {
     RandomHelpers,
     c,
@@ -18,6 +18,7 @@ import {
     claimDailyPointsScenario,
     claimTasksScenario,
     doReview,
+    logStatsScenario,
     registerScenario,
     verifyTasksScenario,
 } from "./actions/interact.js";
@@ -25,6 +26,7 @@ import { bridgeOrbiter } from "./actions/thirdPartyBridges.js";
 
 const author = "@findmeonchain";
 let privates = await shuffleAndOverwriteKeys();
+let proxies = await getProxies()
 switch (settings.mode) {
     case "Week1":
         switch (settings.task) {
@@ -39,7 +41,7 @@ switch (settings.mode) {
                 for (let i = 0; i < privates.length; i++) {
                     await checkGwei(goodGwei);
                     let signer = new Wallet(privates[i]);
-                    let metamask = new MetamaskBridge(signer);
+                    let metamask = new MetamaskBridge(signer, proxies[i % proxies.length]);
                     log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
                     let res = await metamask.executeRoute();
                     if (res.code <= 0) {
@@ -60,7 +62,7 @@ switch (settings.mode) {
                 for (let i = 0; i < privates.length; i++) {
                     await checkGwei(goodGwei);
                     let signer = new Wallet(privates[i]);
-                    let metamask = new MetamaskSwap(signer);
+                    let metamask = new MetamaskSwap(signer, proxies[i % proxies.length]);
                     log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
                     let res = await metamask.executeRoute();
                     // log(res?.log);
@@ -92,7 +94,7 @@ switch (settings.mode) {
                     await checkGwei(goodGwei);
                     let signer = new Wallet(privates[i]);
                     log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
-                    await doReview(signer);
+                    await doReview(signer, proxies[i % proxies.length]);
                     await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
                 }
                 break;
@@ -126,17 +128,19 @@ switch (settings.mode) {
             log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
             switch (interactSettings.mode) {
                 case "register":
-                    await registerScenario(signer);
+                    await registerScenario(signer, proxies[i % proxies.length]);
                     break;
                 case "daily":
-                    await claimDailyPointsScenario(signer);
+                    await claimDailyPointsScenario(signer, proxies[i % proxies.length]);
                     break;
                 case "verify":
-                    await verifyTasksScenario(signer, interactSettings.week);
+                    await verifyTasksScenario(signer, interactSettings.week, proxies[i % proxies.length]);
                     break;
                 case "claim":
-                    await claimTasksScenario(signer, interactSettings.week);
+                    await claimTasksScenario(signer, interactSettings.week, proxies[i % proxies.length]);
                     break;
+                case "stats":
+                    await logStatsScenario(signer, proxies[i % proxies.length])
             }
             await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
         }

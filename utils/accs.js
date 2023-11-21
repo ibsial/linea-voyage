@@ -22,7 +22,7 @@ export const importETHWallets = async (pathToFile = "./privates.txt") => {
 };
 export const getWallets = async () => {
     let initialData = await importETHWallets("./privates.txt");
-    let wallets = [];
+    let privates = [];
     for (let [index, data] of initialData.entries()) {
         try {
             let signer = new ethers.Wallet(data);
@@ -30,9 +30,17 @@ export const getWallets = async () => {
             console.log("INVALID PRIVATE KEY!");
             return;
         }
-        wallets.push(data);
+        privates.push(data);
     }
-    return wallets;
+    return privates;
+};
+export const getProxies = async () => {
+    let initialData = await importETHWallets("./proxies.txt");
+    let proxies = [];
+    for (let [index, data] of initialData.entries()) {
+        proxies.push(data);
+    }
+    return proxies;
 };
 export async function shuffleAndOverwriteKeys() {
     let privates = await getWallets();

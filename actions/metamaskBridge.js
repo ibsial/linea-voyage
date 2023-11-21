@@ -12,13 +12,21 @@ import axios from "axios";
 import { JsonRpcProvider, Wallet, ethers } from "ethers";
 import { chains } from "../utils/chainData.js";
 import { returnStatuses } from "../utils/constants.js";
+import { HttpsProxyAgent } from "https-proxy-agent";
 
 export class MetamaskBridge extends MetamaskBridgeSetup {
     baseUrl = "https://bridge.api.cx.metamask.io";
     signer;
-    constructor(signer) {
+    constructor(signer, proxy = undefined) {
         super();
-        this.axiosInstance = axios.create();
+        if (proxy) {
+            this.axiosInstance = axios.create({
+                httpAgent: new HttpsProxyAgent("http://" + proxy),
+                httpsAgent: new HttpsProxyAgent("http://" + proxy),
+            });
+        } else {
+            this.axiosInstance = axios.create({});
+        }
         this.signer = signer;
         let provider = new JsonRpcProvider(chains[this.fromNetwork].rpc);
         this.signer = this.signer.connect(provider);
@@ -29,7 +37,7 @@ export class MetamaskBridge extends MetamaskBridgeSetup {
         }
         tryCount++;
         let gasPrice = await getGasPrice(this.fromNetwork);
-        txData = { ...txData, ...gasPrice }
+        txData = { ...txData, ...gasPrice };
         try {
             let tx = await this.signer.sendTransaction(txData);
             log(c.green(chains[this.fromNetwork].explorer + tx.hash));

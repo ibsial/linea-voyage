@@ -1,6 +1,7 @@
 import axios from "axios";
 import { log, defaultSleep, c, randomChalk, RandomHelpers } from "../utils/helpers.js";
 import { IntractSetup } from "../config.js";
+import { HttpsProxyAgent } from "https-proxy-agent";
 const refInfo = {
     referralCode: "uwO-g_",
     referralLink: "https://www.intract.io/referral?utm_source=navbar",
@@ -32,10 +33,18 @@ class Interact extends IntractSetup {
     baseUrl = `https://api.intract.io/api/qv1`;
     signer;
     axiosInstance;
-    constructor(signer) {
+    constructor(signer, proxy = undefined) {
+        log(proxy);
         super();
         this.signer = signer;
-        this.axiosInstance = axios.create({});
+        if (proxy) {
+            this.axiosInstance = axios.create({
+                httpAgent: new HttpsProxyAgent("http://" + proxy),
+                httpsAgent: new HttpsProxyAgent("http://" + proxy),
+            });
+        } else {
+            this.axiosInstance = axios.create({});
+        }
     }
     async login() {
         try {
@@ -300,6 +309,7 @@ class Interact extends IntractSetup {
             log(randomChalk(`current GM streak: ${resp.data.streakCount}`));
             return true;
         } catch (e) {
+            // log(e);
             /**
              *
              */
@@ -339,8 +349,8 @@ class Interact extends IntractSetup {
 }
 
 // register
-async function setWallet(signer) {
-    const interact = new Interact(signer);
+async function setWallet(signer, proxy = undefined) {
+    const interact = new Interact(signer, proxy);
     let authInfo = await interact.login();
     let getLineaCampaingUserResponse = await interact.getLineaCampaignUserInfo(authInfo.token);
     const lineaCampaingUserId = getLineaCampaingUserResponse._id;
@@ -353,20 +363,20 @@ async function setWallet(signer) {
     log(randomChalk(setWalletResponse.message));
 }
 
-async function dailyCheckin(signer) {
-    const interact = new Interact(signer);
+async function dailyCheckin(signer, proxy = undefined) {
+    const interact = new Interact(signer, proxy);
     const authInfo = await interact.login();
     await interact.dailyCheckIn(authInfo);
 }
-async function dailyLineaQuiz(signer) {
-    const interact = new Interact(signer);
+async function dailyLineaQuiz(signer, proxy = undefined) {
+    const interact = new Interact(signer, proxy);
     const authInfo = await interact.login();
     const lineaUserInfo = await interact.getLineaCampaignUserInfo(authInfo.token);
     const quizResp = await interact.lineaQuiz(authInfo, lineaUserInfo);
     // log(quizResp)
 }
-async function showStats(signer) {
-    const interact = new Interact(signer);
+async function showStats(signer, proxy = undefined) {
+    const interact = new Interact(signer, proxy);
     const authInfo = await interact.login();
     const lineaUserInfo = await interact.getLineaCampaignUserInfo(authInfo.token);
     log(
@@ -387,8 +397,8 @@ async function showStats(signer) {
 /**************** Week 1 ********************/
 /*********************************************/
 
-async function verifyMetamaskBridge(signer) {
-    const interact = new Interact(signer);
+async function verifyMetamaskBridge(signer, proxy = undefined) {
+    const interact = new Interact(signer, proxy);
     const authInfo = await interact.login();
     const verifyPayload = {
         campaignId: "654a0e8d95c012164b1f1620",
@@ -465,8 +475,8 @@ async function verifyMetamaskBridge(signer) {
         );
     }
 }
-async function claimMetamaskBridge(signer) {
-    const interact = new Interact(signer);
+async function claimMetamaskBridge(signer, proxy = undefined) {
+    const interact = new Interact(signer, proxy);
     const authInfo = await interact.login();
     const camplaignId = lineaWeekInfo.week1.id;
     const taskId = lineaWeekInfo.week1.taskIds.bridge;
@@ -477,8 +487,8 @@ async function claimMetamaskBridge(signer) {
         "metamask bridge",
     );
 }
-async function verifyMetamaskSwap(signer) {
-    const interact = new Interact(signer);
+async function verifyMetamaskSwap(signer, proxy = undefined) {
+    const interact = new Interact(signer, proxy);
     const authInfo = await interact.login();
     const verifyPayload = {
         campaignId: "654a0e8d95c012164b1f1620",
@@ -561,8 +571,8 @@ async function verifyMetamaskSwap(signer) {
         );
     }
 }
-async function claimMetamaskSwap(signer) {
-    const interact = new Interact(signer);
+async function claimMetamaskSwap(signer, proxy = undefined) {
+    const interact = new Interact(signer, proxy);
     const authInfo = await interact.login();
     const camplaignId = lineaWeekInfo.week1.id;
     const taskId = lineaWeekInfo.week1.taskIds.swap;
@@ -572,8 +582,8 @@ async function claimMetamaskSwap(signer) {
 /**************** Week 2 ********************/
 /*********************************************/
 
-async function verifyCoreBridge(signer) {
-    const interact = new Interact(signer);
+async function verifyCoreBridge(signer, proxy = undefined) {
+    const interact = new Interact(signer, proxy);
     const authInfo = await interact.login();
     const verifyPayload = {
         campaignId: "65535ae63cd33ebafe9d68f8",
@@ -631,7 +641,7 @@ async function verifyCoreBridge(signer) {
             isAddedLater: false,
             isVisible: true,
             isDeleted: false,
-            _id: "65535ae63cd33ebafe9d68f9",
+            _id: lineaWeekInfo.week2.taskIds.bridgeCore,
         },
         verificationObject: {
             lineaProjectId: "653aa0a76e3c9704874cdd31",
@@ -649,15 +659,15 @@ async function verifyCoreBridge(signer) {
         );
     }
 }
-async function claimCoreBridge(signer) {
-    const interact = new Interact(signer);
+async function claimCoreBridge(signer, proxy = undefined) {
+    const interact = new Interact(signer, proxy);
     const authInfo = await interact.login();
     const camplaignId = lineaWeekInfo.week2.id;
     const taskId = lineaWeekInfo.week2.taskIds.bridgeCore;
     let claimResp = await interact.claimTask(authInfo.token, camplaignId, taskId, "week2 bridge");
 }
-async function verifyBonusBridge(signer) {
-    const interact = new Interact(signer);
+async function verifyBonusBridge(signer, proxy = undefined) {
+    const interact = new Interact(signer, proxy);
     const authInfo = await interact.login();
     const verifyPayload = {
         campaignId: "65535ae63cd33ebafe9d68f8",
@@ -745,8 +755,8 @@ async function verifyBonusBridge(signer) {
         );
     }
 }
-async function claimBonusBridge(signer) {
-    const interact = new Interact(signer);
+async function claimBonusBridge(signer, proxy = undefined) {
+    const interact = new Interact(signer, proxy);
     const authInfo = await interact.login();
     const camplaignId = lineaWeekInfo.week2.id;
     const taskId = lineaWeekInfo.week2.taskIds.bridgeMany;
@@ -757,8 +767,8 @@ async function claimBonusBridge(signer) {
         "week2 bonus bridge",
     );
 }
-async function verify500Bridge(signer) {
-    const interact = new Interact(signer);
+async function verify500Bridge(signer, proxy = undefined) {
+    const interact = new Interact(signer, proxy);
     const authInfo = await interact.login();
     const verifyPayload = {
         campaignId: "65535ae63cd33ebafe9d68f8",
@@ -838,8 +848,8 @@ async function verify500Bridge(signer) {
         );
     }
 }
-async function claim500Bridge(signer) {
-    const interact = new Interact(signer);
+async function claim500Bridge(signer, proxy = undefined) {
+    const interact = new Interact(signer, proxy);
     const authInfo = await interact.login();
     const camplaignId = lineaWeekInfo.week2.id;
     const taskId = lineaWeekInfo.week2.taskIds.bridge500;
@@ -851,7 +861,7 @@ async function claim500Bridge(signer) {
     );
 }
 async function verify1000Bridge(signer) {
-    const interact = new Interact(signer);
+    const interact = new Interact(signer, proxy);
     const authInfo = await interact.login();
     const verifyPayload = {
         campaignId: "65535ae63cd33ebafe9d68f8",
@@ -937,8 +947,8 @@ async function verify1000Bridge(signer) {
         );
     }
 }
-async function claim1000Bridge(signer) {
-    const interact = new Interact(signer);
+async function claim1000Bridge(signer, proxy = undefined) {
+    const interact = new Interact(signer, proxy);
     const authInfo = await interact.login();
     const camplaignId = lineaWeekInfo.week2.id;
     const taskId = lineaWeekInfo.week2.taskIds.bridge1000;
@@ -949,14 +959,20 @@ async function claim1000Bridge(signer) {
         "week2 $1000 bridge",
     );
 }
-export async function doReview(signer) {
+export async function doReview(signer, proxy = undefined) {
     try {
-        const result = await axios.post("https://dappsheriff.com/api/app/127/reviews", {
+        let axiosInstance;
+        if (proxy) {
+            axiosInstance = axios.create({ httpAgent: new HttpProxyAgent(proxy) });
+        } else {
+            axiosInstance = axios.create({});
+        }
+        const result = await axiosInstance.post("https://dappsheriff.com/api/app/127/reviews", {
             app_id: RandomHelpers.getRandomIntFromTo(10, 150),
             reviewer: signer.address,
             review: `"${RandomHelpers.getRandomSentence()}"`,
             review: sentence,
-            rate: RandomHelpers.getRandomIntFromTo(4,5),
+            rate: RandomHelpers.getRandomIntFromTo(4, 5),
         });
         console.log(`Review has been submitted`);
     } catch (e) {
@@ -965,8 +981,8 @@ export async function doReview(signer) {
         return await doReview(signer);
     }
 }
-async function verifyWeek2Review(signer) {
-    const interact = new Interact(signer);
+async function verifyWeek2Review(signer, proxy = undefined) {
+    const interact = new Interact(signer, proxy);
     const authInfo = await interact.login();
     const verifyPayload = {
         campaignId: "65535ae63cd33ebafe9d68f8",
@@ -1021,7 +1037,7 @@ async function verifyWeek2Review(signer) {
         authInfo.token,
         verifyPayload,
         preconditiontaskIds,
-        "[review]",
+        "review",
     );
     if (verifyResp) {
         log(c.green(verifyResp));
@@ -1033,56 +1049,56 @@ async function verifyWeek2Review(signer) {
         );
     }
 }
-export async function claimWeek2Review(signer) {
+export async function claimWeek2Review(signer, proxy = undefined) {
     const campaignId = lineaWeekInfo.week2.id;
     const taskId = lineaWeekInfo.week2.taskIds.postReview;
-    const interact = new Interact(signer);
+    const interact = new Interact(signer, proxy);
     const authInfo = await interact.login();
     await interact.claimTask(authInfo.token, campaignId, taskId, "Review task");
 }
 
-export async function registerScenario(signer) {
-    await setWallet(signer);
+export async function registerScenario(signer, proxy = undefined) {
+    await setWallet(signer, proxy);
 }
-export async function claimDailyPointsScenario(signer) {
-    await dailyCheckin(signer);
-    await dailyLineaQuiz(signer);
+export async function claimDailyPointsScenario(signer, proxy = undefined) {
+    await dailyCheckin(signer, proxy);
+    await dailyLineaQuiz(signer, proxy);
 }
-export async function logStatsScenario(signer) {
-    await showStats(signer);
+export async function logStatsScenario(signer, proxy = undefined) {
+    await showStats(signer, proxy);
 }
 
-export async function verifyTasksScenario(signer, week) {
+export async function verifyTasksScenario(signer, week, proxy = undefined) {
     switch (week) {
         case "1":
-            await verifyMetamaskBridge(signer);
-            await verifyMetamaskSwap(signer);
+            await verifyMetamaskBridge(signer, proxy);
+            await verifyMetamaskSwap(signer, proxy);
         case "2":
-            await verifyCoreBridge(signer);
+            await verifyCoreBridge(signer, proxy);
             await defaultSleep(3);
-            await verifyBonusBridge(signer);
+            await verifyBonusBridge(signer, proxy);
             await defaultSleep(3);
-            await verify500Bridge(signer);
+            await verify500Bridge(signer, proxy);
             await defaultSleep(3);
-            await verify1000Bridge(signer);
+            await verify1000Bridge(signer, proxy);
             await defaultSleep(3);
-            await verifyWeek2Review(signer);
+            await verifyWeek2Review(signer, proxy);
     }
 }
-export async function claimTasksScenario(signer, week) {
+export async function claimTasksScenario(signer, week, proxy = undefined) {
     switch (week) {
         case "1":
-            await claimMetamaskBridge(signer);
-            await claimMetamaskSwap(signer);
+            await claimMetamaskBridge(signer, proxy);
+            await claimMetamaskSwap(signer, proxy);
         case "2":
-            await claimCoreBridge(signer);
+            await claimCoreBridge(signer, proxy);
             await defaultSleep(3);
-            await claimBonusBridge(signer);
+            await claimBonusBridge(signer, proxy);
             await defaultSleep(3);
-            await claim500Bridge(signer);
+            await claim500Bridge(signer, proxy);
             await defaultSleep(3);
-            await claim1000Bridge(signer);
+            await claim1000Bridge(signer, proxy);
             await defaultSleep(3);
-            await claimWeek2Review(signer);
+            await claimWeek2Review(signer, proxy);
     }
 }

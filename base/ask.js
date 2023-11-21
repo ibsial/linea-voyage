@@ -87,6 +87,10 @@ class AskCli {
                         name: `claim points`,
                         value: "claim",
                     },
+                    {
+                        name: "show account XP stats",
+                        value: "stats"
+                    },
                 ],
                 default: "daily",
                 loop: true,
