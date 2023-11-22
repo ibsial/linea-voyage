@@ -860,7 +860,7 @@ async function claim500Bridge(signer, proxy = undefined) {
         "week2 $500 bridge",
     );
 }
-async function verify1000Bridge(signer) {
+async function verify1000Bridge(signer, proxy = undefined) {
     const interact = new Interact(signer, proxy);
     const authInfo = await interact.login();
     const verifyPayload = {
