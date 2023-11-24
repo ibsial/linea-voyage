@@ -20,6 +20,9 @@ This script lets you complete Linea tasks and will be upgraded to Metamask farmi
 - week 2
     - Orbiter bridge
     - Send DappSheriff review
+- week 3
+    - Izumi swap
+    - Send DappSheriff review
 - Claim & verify any week  
 - Daily gm/quest
 

@@ -30,7 +30,8 @@ class Izumi extends IzumiSetup {
         this.izumi = this.izumi.connect(this.signer);
         this.params = {
             path: "0x",
-            recipient: this.toToken == chains[this.network].currency ? ZeroAddress : this.signer.address,
+            recipient:
+                this.toToken == chains[this.network].currency ? ZeroAddress : this.signer.address,
             amount: 0n,
             minAcquired: 1n,
             deadline: this.getDeadline(),
@@ -104,9 +105,9 @@ class Izumi extends IzumiSetup {
             await this.setupSwap();
             calldata = this.buildMulticall();
         } catch (e) {
-            log(e)
-            log(`error on setup occured: ${e.message}`)
-            return returnStatuses.fiasco
+            log(e);
+            log(`error on setup occured: ${e.message}`);
+            return returnStatuses.fiasco;
         }
         let gasPriceData = await getGasPrice(this.network);
         try {
@@ -180,5 +181,9 @@ class Izumi extends IzumiSetup {
 
 export async function makeIzumiSwap(signer) {
     let izumi = new Izumi(signer);
+    if (izumi.network != "Linea") {
+        log(c.red(`Izumi is supported on Linea only..`));
+        return returnStatuses.fiasco;
+    }
     return await izumi.swap(izumi);
 }
