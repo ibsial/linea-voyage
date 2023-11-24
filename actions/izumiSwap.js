@@ -3,14 +3,9 @@ import { izumi_abi } from "../utils/abi.js";
 import { IzumiSetup } from "../config.js";
 import { log } from "../utils/helpers.js";
 
-const IZUMI_ADDRESS = "0x032b241de86a8660f1ae0691a4760b426ea246d7";
-const pathType = {
-    fromToken, // address
-    poolFee, // uint24
-    toToken, // address
-};
 class Izumi extends IzumiSetup {
-    izumi = new Contract(IZUMI_ADDRESS, izumi_abi);
+    IZUMI_ADDRESS = "0x032b241de86a8660f1ae0691a4760b426ea246d7";
+    izumi = new Contract(this.IZUMI_ADDRESS, izumi_abi);
 
     constructor(signer) {
         this.signer = signer;
@@ -25,13 +20,13 @@ class Izumi extends IzumiSetup {
     }
 
     async getAmountOut() {
-        let calldata = this.buildMulticall()
+        let calldata = this.buildMulticall();
         let tx;
         try {
-            tx = await this.izumi.multicall.estimateGas(calldata)
-            log(tx)
+            tx = await this.izumi.multicall.estimateGas(calldata);
+            log(tx);
         } catch (e) {
-            log(e)
+            log(e);
         }
     }
     buildMulticall() {
@@ -39,11 +34,11 @@ class Izumi extends IzumiSetup {
             let swapCall = this.izumi.interface.encodeFunctionData("swapAmount", [this.params]);
             let unwrapCall = this.izumi.interface.encodeFunctionData("");
             let refundCall = this.izumi.interface.encodeFunctionData("refundETH", []);
-            return [swapCall, unwrapCall, refundCall]
+            return [swapCall, unwrapCall, refundCall];
         } else {
             let swapCall = this.izumi.interface.encodeFunctionData("swapAmount", [this.params]);
             let refundCall = this.izumi.interface.encodeFunctionData("refundETH", []);
-            return [swapCall, refundCall]
+            return [swapCall, refundCall];
         }
     }
     async setupSwap() {
@@ -97,7 +92,7 @@ class Izumi extends IzumiSetup {
 }
 
 export async function makeIzumiSwap(signer) {
-    let izumi = new Izumi(signer)
-    await izumi.setupSwap()
-    await izumi.getAmountOut()
+    let izumi = new Izumi(signer);
+    await izumi.setupSwap();
+    await izumi.getAmountOut();
 }
