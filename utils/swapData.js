@@ -134,6 +134,11 @@ export const swapData = {
             address: "0xe5D7C2a44FfDDf6b295A15c148167daaAf5Cf34f",
             decimals: 18,
         },
+        wstETH: {
+            name: "staked ETH",
+            address: "0xB5beDd42000b71FddE22D3eE8a79Bd49A568fC8F",
+            decimals: 18,
+        },
         USDC: {
             name: "USDC",
             address: "0x176211869ca2b568f2a7d4ee941e073a821ee1ff",

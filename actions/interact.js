@@ -34,7 +34,6 @@ class Interact extends IntractSetup {
     signer;
     axiosInstance;
     constructor(signer, proxy = undefined) {
-        log(proxy);
         super();
         this.signer = signer;
         if (proxy) {
@@ -302,7 +301,7 @@ class Interact extends IntractSetup {
         try {
             let resp = await this.axiosInstance.post(this.baseUrl + "/auth/gm-streak", undefined, {
                 headers: {
-                    authorization: `Bearer ${authInfo.token}`,
+                    Authorization: `Bearer ${authInfo.token}`,
                 },
             });
             // log(resp.data);

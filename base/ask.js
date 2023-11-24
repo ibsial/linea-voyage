@@ -1,5 +1,5 @@
 import inquirer from "inquirer";
-import { c } from "../utils/helpers.js";
+import { c, log } from "../utils/helpers.js";
 
 class AskCli {
     async askMode() {
@@ -16,6 +16,10 @@ class AskCli {
                     {
                         name: `complete Week2 quests`,
                         value: "Week2",
+                    },
+                    {
+                        name: `complete Week3 quests`,
+                        value: "Week3",
                     },
                     {
                         name: `do Intract verify/claim/daily tasks`,
@@ -45,6 +49,16 @@ class AskCli {
                 {
                     name: `BridgeOrbiter`,
                     value: "BridgeOrbiter",
+                },
+                {
+                    name: `ReviewDapp`,
+                    value: "ReviewDapp",
+                },
+            ],
+            Week3: [
+                {
+                    name: `SwapIzumi`,
+                    value: "SwapIzumi",
                 },
                 {
                     name: `ReviewDapp`,

@@ -23,10 +23,11 @@ import {
     verifyTasksScenario,
 } from "./actions/interact.js";
 import { bridgeOrbiter } from "./actions/thirdPartyBridges.js";
+import { makeIzumiSwap } from "./actions/izumiSwap.js";
 
 const author = "@findmeonchain";
 let privates = await shuffleAndOverwriteKeys();
-let proxies = await getProxies()
+let proxies = await getProxies();
 switch (settings.mode) {
     case "Week1":
         switch (settings.task) {
@@ -100,6 +101,32 @@ switch (settings.mode) {
                 break;
         }
         break;
+    case "Week3":
+        switch (settings.task) {
+            case "swapIzumi":
+                for (let i = 0; i < privates.length; i++) {
+                    await checkGwei(goodGwei);
+                    let signer = new Wallet(privates[i]);
+                    log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
+                    let res = await makeIzumiSwap(signer);
+                    if (res.code <= 0) {
+                        log(c.red(res.log));
+                        continue;
+                    }
+                    await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
+                }
+                break;
+            case "ReviewDapp":
+                for (let i = 0; i < privates.length; i++) {
+                    await checkGwei(goodGwei);
+                    let signer = new Wallet(privates[i]);
+                    log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
+                    await doReview(signer, proxies[i % proxies.length]);
+                    await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
+                }
+                break;
+        }
+        break;
     case "Intract":
         let intSet = new IntractSetup();
         let interactSettings = {};
@@ -134,13 +161,21 @@ switch (settings.mode) {
                     await claimDailyPointsScenario(signer, proxies[i % proxies.length]);
                     break;
                 case "verify":
-                    await verifyTasksScenario(signer, interactSettings.week, proxies[i % proxies.length]);
+                    await verifyTasksScenario(
+                        signer,
+                        interactSettings.week,
+                        proxies[i % proxies.length],
+                    );
                     break;
                 case "claim":
-                    await claimTasksScenario(signer, interactSettings.week, proxies[i % proxies.length]);
+                    await claimTasksScenario(
+                        signer,
+                        interactSettings.week,
+                        proxies[i % proxies.length],
+                    );
                     break;
                 case "stats":
-                    await logStatsScenario(signer, proxies[i % proxies.length])
+                    await logStatsScenario(signer, proxies[i % proxies.length]);
             }
             await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
         }
