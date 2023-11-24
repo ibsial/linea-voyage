@@ -1,4 +1,4 @@
-import { AbiCoder, Contract, JsonRpcProvider, ethers, solidityPacked } from "ethers";
+import { AbiCoder, Contract, JsonRpcProvider, ZeroAddress, ethers, solidityPacked } from "ethers";
 import { izumi_abi } from "../utils/abi.js";
 import { IzumiSetup, maxRetries } from "../config.js";
 import {
@@ -30,7 +30,7 @@ class Izumi extends IzumiSetup {
         this.izumi = this.izumi.connect(this.signer);
         this.params = {
             path: "0x",
-            recipient: this.signer.address,
+            recipient: this.toToken == chains[this.network].currency ? ZeroAddress : this.signer.address,
             amount: 0n,
             minAcquired: 1n,
             deadline: this.getDeadline(),
@@ -67,7 +67,16 @@ class Izumi extends IzumiSetup {
     }
     async setupSwap() {
         this.params.amount = await this.getRandomAmount(this.fromToken);
-        // if native use WNATIVE
+        // approve
+        if (this.fromToken != chains[this.network].currency) {
+            let approve = await this.web3wrapper.approveToken(
+                this.fromToken,
+                this.IZUMI_ADDRESS,
+                this.params.amount,
+            );
+            await defaultSleep(10);
+        }
+        // if swap NATIVE pass WNATIVE to router
         let tokenInAddress =
             this.fromToken == chains[this.network].currency
                 ? swapData[this.network]["W" + this.fromToken].address
@@ -94,15 +103,8 @@ class Izumi extends IzumiSetup {
         try {
             await this.setupSwap();
             calldata = this.buildMulticall();
-            if (this.fromToken != chains[this.network].currency) {
-                let approve = await this.web3wrapper.approveToken(
-                    this.fromToken,
-                    this.IZUMI_ADDRESS,
-                    this.params.amount,
-                );
-                await defaultSleep(10);
-            }
         } catch (e) {
+            log(e)
             log(`error on setup occured: ${e.message}`)
             return returnStatuses.fiasco
         }

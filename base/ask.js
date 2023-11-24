@@ -128,8 +128,12 @@ class AskCli {
                         name: `week 2`,
                         value: "2",
                     },
+                    {
+                        name: `week 3`,
+                        value: "3",
+                    },
                 ],
-                default: "2",
+                default: "3",
                 loop: true,
             },
         ];

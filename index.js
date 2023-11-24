@@ -92,7 +92,6 @@ switch (settings.mode) {
                 break;
             case "ReviewDapp":
                 for (let i = 0; i < privates.length; i++) {
-                    await checkGwei(goodGwei);
                     let signer = new Wallet(privates[i]);
                     log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
                     await doReview(signer, proxies[i % proxies.length]);
@@ -118,7 +117,6 @@ switch (settings.mode) {
                 break;
             case "ReviewDapp":
                 for (let i = 0; i < privates.length; i++) {
-                    await checkGwei(goodGwei);
                     let signer = new Wallet(privates[i]);
                     log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
                     await doReview(signer, proxies[i % proxies.length]);
