@@ -103,7 +103,7 @@ class WEb3Wrapper {
             return balance;
         } catch (e) {
             console.log(c.red("error on token balance fetching occured"));
-            console.log(c.red(e.reason));
+            console.log(c.red(e));
             await sleep(timeout);
             return await this.getTokenBalance(token);
         }

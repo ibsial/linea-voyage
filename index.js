@@ -103,7 +103,7 @@ switch (settings.mode) {
         break;
     case "Week3":
         switch (settings.task) {
-            case "swapIzumi":
+            case "SwapIzumi":
                 for (let i = 0; i < privates.length; i++) {
                     await checkGwei(goodGwei);
                     let signer = new Wallet(privates[i]);
