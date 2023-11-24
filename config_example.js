@@ -23,7 +23,7 @@ export class MetamaskSwapSetup {
        Arbitrum:    ETH  | WETH | USDC | USDCe | USDT | ARB | GMX  | STG
        Optimism:    ETH  | WETH | USDC | USDCe | USDT | OP  | VELO | STG
        Base:        not implemented by Metamask yet
-       Linea:       ETH  | WETH | USDC | ----- | USDT |     |      |
+       Linea:       ETH  | WETH | USDC | ----- | USDT |     |      | wstETH
        Zksync:      not implemented by Metamask yet
        Bsc:         BNB  | WBNB | USDC | BUSD  | USDT | CAKE| TWT  | STG
        Polygon:     MATIC|WMATIC| ---- | USDCe | USDT | DAI | STG  |
@@ -50,4 +50,13 @@ export const ThirdPartyBridgeSetup = {
     /* "ETH" */
     toToken: "ETH",
     amountFromTo: ["0.013", "0.014"],
+}
+
+export class IzumiSetup {
+    network = "Linea"
+    /* "ETH"  | "WETH" | "USDC" | ----- | "USDT" |     |      | "wstETH" */
+    fromToken  = "ETH"
+    /* "ETH"  | "WETH" | "USDC" | ----- | "USDT" |     |      | "wstETH" */
+    toToken = "wstETH"
+    amountFromTo = ["0.013", "0.014"] // numbers ["0.1", "0.2"] | percentage ["30%", "40%"]
 }
