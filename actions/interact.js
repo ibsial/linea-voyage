@@ -29,7 +29,7 @@ const lineaWeekInfo = {
         id: "655b48ec2e9188e21c94e93e",
         taskIds: {
             swapCore: "655b48ec2e9188e21c94e93f",
-            swapAggregator: "655b48ed2e9188e21c94e943",
+            swapAggregator: "655b48ec2e9188e21c94e941",
             swap1000: "655b48ed2e9188e21c94e946",
             swap20: "655b48ed2e9188e21c94e943",
             swapRwaLsd: "655b48ed2e9188e21c94e948",
