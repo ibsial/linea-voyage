@@ -106,6 +106,7 @@ class Interact extends IntractSetup {
                 token: authToken,
                 expires: expDate.toISOString(),
             };
+            this.authInfo = authInfo;
             return authInfo;
         } catch (e) {
             log(e);
@@ -1072,8 +1073,9 @@ export async function verifyWeek3SwapCore(signer, intract = undefined, proxy = u
     let interact = intract;
     if (!intract) {
         interact = new Interact(signer, proxy);
+        await interact.login();
     }
-    const authInfo = await interact.login();
+    const authInfo = await interact.authInfo;
     const verifyPayload = {
         campaignId: "655b48ec2e9188e21c94e93e",
         userInputs: {
@@ -1181,16 +1183,18 @@ export async function claimWeek3SwapCore(signer, intract = undefined, proxy = un
     let interact = intract;
     if (!intract) {
         interact = new Interact(signer, proxy);
+        await interact.login();
     }
-    const authInfo = await interact.login();
+    const authInfo = await interact.authInfo;
     await interact.claimTask(authInfo.token, campaignId, taskId, "core swap");
 }
 export async function verifyWeek3SwapAggregator(signer, intract = undefined, proxy = undefined) {
     let interact = intract;
     if (!intract) {
         interact = new Interact(signer, proxy);
+        await interact.login();
     }
-    const authInfo = await interact.login();
+    const authInfo = await interact.authInfo;
     const verifyPayload = {
         campaignId: "655b48ec2e9188e21c94e93e",
         userInputs: { lineaProjectId: "65565a2f86b270fa5f703366", TRANSACTION_HASH: "0x" },
@@ -1276,16 +1280,18 @@ export async function claimWeek3SwapAggregator(signer, intract = undefined, prox
     let interact = intract;
     if (!intract) {
         interact = new Interact(signer, proxy);
+        await interact.login();
     }
-    const authInfo = await interact.login();
+    const authInfo = await interact.authInfo;
     await interact.claimTask(authInfo.token, campaignId, taskId, "aggregator swap");
 }
 export async function verifyWeek3Swap20(signer, intract = undefined, proxy = undefined) {
     let interact = intract;
     if (!intract) {
         interact = new Interact(signer, proxy);
+        await interact.login();
     }
-    const authInfo = await interact.login();
+    const authInfo = await interact.authInfo;
     const verifyPayload = {
         campaignId: "655b48ec2e9188e21c94e93e",
         userInputs: {
@@ -1383,16 +1389,18 @@ export async function claimWeek3Swap20(signer, intract = undefined, proxy = unde
     let interact = intract;
     if (!intract) {
         interact = new Interact(signer, proxy);
+        await interact.login();
     }
-    const authInfo = await interact.login();
+    const authInfo = await interact.authInfo;
     await interact.claimTask(authInfo.token, campaignId, taskId, "20 swaps");
 }
 export async function verifyWeek3Swap1000(signer, intract = undefined, proxy = undefined) {
     let interact = intract;
     if (!intract) {
         interact = new Interact(signer, proxy);
+        await interact.login();
     }
-    const authInfo = await interact.login();
+    const authInfo = await interact.authInfo;
     const verifyPayload = {
         campaignId: "655b48ec2e9188e21c94e93e",
         userInputs: {
@@ -1481,16 +1489,18 @@ export async function claimWeek3Swap1000(signer, intract = undefined, proxy = un
     let interact = intract;
     if (!intract) {
         interact = new Interact(signer, proxy);
+        await interact.login();
     }
-    const authInfo = await interact.login();
+    const authInfo = await interact.authInfo;
     await interact.claimTask(authInfo.token, campaignId, taskId, "swap $1000");
 }
 export async function verifyWeek3SwapRWA(signer, intract = undefined, proxy = undefined) {
     let interact = intract;
     if (!intract) {
         interact = new Interact(signer, proxy);
+        await interact.login();
     }
-    const authInfo = await interact.login();
+    const authInfo = await interact.authInfo;
     const verifyPayload = {
         campaignId: "655b48ec2e9188e21c94e93e",
         userInputs: { lineaProjectId: "65565a2f86b270fa5f703366", TRANSACTION_HASH: "0x" },
@@ -1571,19 +1581,20 @@ export async function verifyWeek3SwapRWA(signer, intract = undefined, proxy = un
         );
     }
 }
-
 export async function claimWeek3SwapRWA(signer, intract = undefined, proxy = undefined) {
     const campaignId = lineaWeekInfo.week3.id;
     const taskId = lineaWeekInfo.week3.taskIds.swapRwaLsd;
     let interact = intract;
     if (!intract) {
         interact = new Interact(signer, proxy);
+        await interact.login();
     }
-    const authInfo = await interact.login();
+    const authInfo = await interact.authInfo;
     await interact.claimTask(authInfo.token, campaignId, taskId, "swap RWA/LSD");
 }
 export async function verifyAllWeek3(signer, proxy = undefined) {
     const intract = new Interact(signer, proxy);
+    await intract.login()
     await verifyWeek3SwapCore(signer, intract, proxy);
     await defaultSleep(3);
     await verifyWeek3SwapAggregator(signer, intract, proxy);
@@ -1598,6 +1609,7 @@ export async function verifyAllWeek3(signer, proxy = undefined) {
 }
 export async function claimAllWeek3(signer, proxy = undefined) {
     const intract = new Interact(signer, proxy);
+    await intract.login()
     await claimWeek3SwapCore(signer, intract, proxy);
     await defaultSleep(3);
     await claimWeek3SwapAggregator(signer, intract, proxy);
