@@ -107,7 +107,7 @@ class Izumi extends IzumiSetup {
         } catch (e) {
             log(e);
             log(`error on setup occured: ${e.message}`);
-            return returnStatuses.fiasco;
+            return await this.swap(count);
         }
         let gasPriceData = await getGasPrice(this.network);
         try {

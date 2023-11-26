@@ -179,4 +179,4 @@ switch (settings.mode) {
         }
         break;
 }
-await delayedPrint(randomChalk(`Congrats, you've reached the finish line!`));
+await delayedPrint(randomChalk(`Everything comes to an end... At least ${c.bold("@findmeonchain")} can say goodbye!`));
