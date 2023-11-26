@@ -133,24 +133,7 @@ class WEb3Wrapper {
             try {
                 let gasPriceData = await getGasPrice(this.networkName);
                 tx = await tokenWithSigner.approve(toAddress, amount, gasPriceData);
-                // let ts = new Date();
-                // ts =
-                //     "Time: " +
-                //     (ts.getDate() + 1) +
-                //     "_" +
-                //     (ts.getMonth() + 1) +
-                //     "_" +
-                //     ts.getFullYear() +
-                //     " " +
-                //     ts.getHours() +
-                //     ":" +
-                //     ts.getMinutes() +
-                //     ":" +
-                //     ts.getSeconds();
-                console.log(
-                    // ts,
-                    c.green(chains[this.networkName].explorer + tx.hash),
-                );
+                console.log(c.green(chains[this.networkName].explorer + tx.hash));
             } catch (e) {
                 console.log(c.red("approve failed due to:"));
                 console.log(e);

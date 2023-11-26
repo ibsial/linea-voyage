@@ -122,7 +122,7 @@ export async function transactionPassed(hash, networkName, beenSleeping = 0) {
         }
     } catch (e) {
         await defaultSleep(timeout);
-        return await this.transactionPassed(hash, networkName, beenSleeping + timeout);
+        return await transactionPassed(hash, networkName, beenSleeping + timeout);
     }
 }
 export async function getGasPrice(networkName) {

@@ -128,7 +128,7 @@ export class MetamaskSwap extends MetamaskSwapSetup {
     async getRandomAmount(tokenName = this.fromToken) {
         if (this.amountFromTo[0].includes("%") && this.amountFromTo[1].includes("%")) {
             let percentageFrom = BigInt(this.amountFromTo[0].split("%")[0]);
-            let percentageTo = BigInt(this.amountFromTo[0].split("%")[0]);
+            let percentageTo = BigInt(this.amountFromTo[1].split("%")[0]);
             let randomPercentage = RandomHelpers.getRandomBnFromTo(percentageFrom, percentageTo);
             if (tokenName == chains[this.network].currency) {
                 let balance = await this.web3wrapper.getNativeBalace();

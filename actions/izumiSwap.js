@@ -145,7 +145,7 @@ class Izumi extends IzumiSetup {
     async getRandomAmount(tokenName = this.fromToken) {
         if (this.amountFromTo[0].includes("%") && this.amountFromTo[1].includes("%")) {
             let percentageFrom = BigInt(this.amountFromTo[0].split("%")[0]);
-            let percentageTo = BigInt(this.amountFromTo[0].split("%")[0]);
+            let percentageTo = BigInt(this.amountFromTo[1].split("%")[0]);
             let randomPercentage = RandomHelpers.getRandomBnFromTo(percentageFrom, percentageTo);
             if (tokenName == chains[this.network].currency) {
                 let balance = await this.web3wrapper.getNativeBalace();
@@ -185,5 +185,5 @@ export async function makeIzumiSwap(signer) {
         log(c.red(`Izumi is supported on Linea only..`));
         return returnStatuses.fiasco;
     }
-    return await izumi.swap(izumi);
+    return await izumi.swap();
 }
