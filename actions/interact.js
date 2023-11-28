@@ -3,7 +3,7 @@ import { log, defaultSleep, c, randomChalk, RandomHelpers } from "../utils/helpe
 import { IntractSetup } from "../config.js";
 import { HttpsProxyAgent } from "https-proxy-agent";
 const refInfo = {
-    referralCode: "uwO-g_",
+    referralCode: "KKktVW",
     referralLink: "https://www.intract.io/referral?utm_source=navbar",
     referralSource: "REFERRAL_PAGE",
 };
@@ -36,6 +36,12 @@ const lineaWeekInfo = {
             postReview: "655b48ed2e9188e21c94e94a",
         },
     },
+    week4: {
+        id: "65647f06731b793354cb239c",
+        taskIds: {
+            postReview: "65647f06731b793354cb23b0",
+        },
+    },
 };
 /*
     thanks to https://github.com/tridetch/chain-abuzer
@@ -48,7 +54,7 @@ class Interact extends IntractSetup {
         super();
         this.signer = signer;
         if (proxy) {
-            log(proxy)
+            log(proxy);
             this.axiosInstance = axios.create({
                 httpAgent: new HttpsProxyAgent("http://" + proxy),
                 httpsAgent: new HttpsProxyAgent("http://" + proxy),
@@ -980,7 +986,7 @@ export async function doReview(signer, proxy = undefined) {
             axiosInstance = axios.create({});
         }
         const result = await axiosInstance.post("https://dappsheriff.com/api/app/127/reviews", {
-            app_id: 116,
+            app_id: 132,
             reviewer: signer.address,
             review: `"${RandomHelpers.getRandomSentence()}"`,
             rate: RandomHelpers.getRandomIntFromTo(4, 5),
@@ -1068,7 +1074,7 @@ export async function claimReview(signer, proxy = undefined, week = lineaWeekInf
     await interact.claimTask(authInfo.token, campaignId, taskId, "Review task");
 }
 /*********************************************/
-/**************** Week 3 ********************/
+/***************** Week 3 ********************/
 /*********************************************/
 export async function verifyWeek3SwapCore(signer, intract = undefined, proxy = undefined) {
     let interact = intract;
@@ -1601,82 +1607,80 @@ async function verifyWeek3Review(signer, intract = undefined, proxy = undefined)
     }
     const authInfo = await interact.authInfo;
     const verifyPayload = {
-        "campaignId": lineaWeekInfo.week3.id,
-        "userInputs": {
-            "TRANSACTION_HASH": "0x"
+        campaignId: lineaWeekInfo.week3.id,
+        userInputs: {
+            TRANSACTION_HASH: "0x",
         },
-        "task": {
-            "userInputs": {
-                "initiateButton": {
-                    "label": "Write a review!",
-                    "baseLink": "https://dappsheriff.com/",
-                    "isExist": true
+        task: {
+            userInputs: {
+                initiateButton: {
+                    label: "Write a review!",
+                    baseLink: "https://dappsheriff.com/",
+                    isExist: true,
                 },
-                "verifyButton": {
-                    "label": "Verify",
-                    "callbackFunction": true,
-                    "callbackParameters": [
+                verifyButton: {
+                    label: "Verify",
+                    callbackFunction: true,
+                    callbackParameters: [
                         {
-                            "source": "ADMIN_INPUT_FIELD",
-                            "key": "DAPPSHERIFF_SLUG"
-                        }
-                    ]
+                            source: "ADMIN_INPUT_FIELD",
+                            key: "DAPPSHERIFF_SLUG",
+                        },
+                    ],
                 },
-                "dynamicInputs": []
+                dynamicInputs: [],
             },
-            "asyncVerifyConfig": {
-                "isAsyncVerify": true,
-                "verifyTimeInSeconds": 1200,
-                "maxRetryCount": 3,
-                "retryTimeInSeconds": 600,
-                "isScatterEnabled": false,
-                "maxScatterInSeconds": 0
+            asyncVerifyConfig: {
+                isAsyncVerify: true,
+                verifyTimeInSeconds: 1200,
+                maxRetryCount: 3,
+                retryTimeInSeconds: 600,
+                isScatterEnabled: false,
+                maxScatterInSeconds: 0,
             },
-            "powVerifyConfig": {
-                "isPOWVerify": false
+            powVerifyConfig: {
+                isPOWVerify: false,
             },
-            "recurrenceConfig": {
-                "isRecurring": false,
-                "frequencyInDays": 1,
-                "maxRecurrenceCount": 1
+            recurrenceConfig: {
+                isRecurring: false,
+                frequencyInDays: 1,
+                maxRecurrenceCount: 1,
             },
-            "flashTaskConfig": {
-                "isFlashTask": false
+            flashTaskConfig: {
+                isFlashTask: false,
             },
-            "name": "Review your favorite dapp of the Token Swap wave on DappSheriff (for 20XP)",
-            "description": "Verify that you added review on Dapsheriff",
-            "templateType": "DappsheriffReview",
-            "xp": 20,
-            "adminInputs": [
+            name: "Review your favorite dapp of the Token Swap wave on DappSheriff (for 20XP)",
+            description: "Verify that you added review on Dapsheriff",
+            templateType: "DappsheriffReview",
+            xp: 20,
+            adminInputs: [
                 {
-                    "key": "DAPPSHERIFF_SLUG",
-                    "inputType": "INPUT_STRING",
-                    "label": "URI SLUG",
-                    "placeholder": "",
-                    "value": "waves/2",
-                    "_id": "655b48ed2e9188e21c94e94b"
-                }
+                    key: "DAPPSHERIFF_SLUG",
+                    inputType: "INPUT_STRING",
+                    label: "URI SLUG",
+                    placeholder: "",
+                    value: "waves/2",
+                    _id: "655b48ed2e9188e21c94e94b",
+                },
             ],
-            "isAttributionTask": true,
-            "templateFamily": "LINEA/WEEK1",
-            "totalUsersCompleted": 204417,
-            "totalRecurringUsersCompleted": [],
-            "requiredLogins": [
-                "EVMWallet"
-            ],
-            "isIntractTask": false,
-            "isRequiredTask": false,
-            "showOnChainHelper": false,
-            "hasMaxRetryCheck": false,
-            "hasRateLimitCheck": false,
-            "isAddedLater": false,
-            "isVisible": true,
-            "isDeleted": false,
-            "_id": lineaWeekInfo.week3.taskIds.postReview
+            isAttributionTask: true,
+            templateFamily: "LINEA/WEEK1",
+            totalUsersCompleted: 204417,
+            totalRecurringUsersCompleted: [],
+            requiredLogins: ["EVMWallet"],
+            isIntractTask: false,
+            isRequiredTask: false,
+            showOnChainHelper: false,
+            hasMaxRetryCheck: false,
+            hasRateLimitCheck: false,
+            isAddedLater: false,
+            isVisible: true,
+            isDeleted: false,
+            _id: lineaWeekInfo.week3.taskIds.postReview,
         },
-        "verificationObject": {
-            "questerWalletAddress": signer.address
-        }
+        verificationObject: {
+            questerWalletAddress: signer.address,
+        },
     };
     const preconditiontaskIds = [lineaWeekInfo.week3.taskIds.swapCore];
     let verifyResp = await interact.verifyTask(
@@ -1708,7 +1712,7 @@ export async function claimWeek3Review(signer, intract = undefined, proxy = unde
 }
 export async function verifyAllWeek3(signer, proxy = undefined) {
     const intract = new Interact(signer, proxy);
-    await intract.login()
+    await intract.login();
     await verifyWeek3SwapCore(signer, intract, proxy);
     await defaultSleep(3);
     await verifyWeek3SwapAggregator(signer, intract, proxy);
@@ -1723,7 +1727,7 @@ export async function verifyAllWeek3(signer, proxy = undefined) {
 }
 export async function claimAllWeek3(signer, proxy = undefined) {
     const intract = new Interact(signer, proxy);
-    await intract.login()
+    await intract.login();
     await claimWeek3SwapCore(signer, intract, proxy);
     await defaultSleep(3);
     await claimWeek3SwapAggregator(signer, intract, proxy);
@@ -1735,6 +1739,120 @@ export async function claimAllWeek3(signer, proxy = undefined) {
     await claimWeek3Swap20(signer, intract, proxy);
     await defaultSleep(3);
     await claimWeek3Review(signer, intract, proxy);
+}
+/*********************************************/
+/***************** Week 4 ********************/
+/*********************************************/
+async function verifyWeek4Review(signer, intract = undefined, proxy = undefined) {
+    let interact = intract;
+    if (!intract) {
+        interact = new Interact(signer, proxy);
+        await interact.login();
+    }
+    const authInfo = await interact.authInfo;
+    const verifyPayload = {
+        campaignId: lineaWeekInfo.week4.id,
+        userInputs: {
+            TRANSACTION_HASH: "0x",
+        },
+        task: {
+            userInputs: {
+                initiateButton: {
+                    label: "Write a review!",
+                    baseLink: "https://dappsheriff.com/",
+                    isExist: true,
+                },
+                verifyButton: {
+                    label: "Verify",
+                    callbackFunction: true,
+                    callbackParameters: [
+                        {
+                            source: "ADMIN_INPUT_FIELD",
+                            key: "DAPPSHERIFF_SLUG",
+                        },
+                    ],
+                },
+                dynamicInputs: [],
+            },
+            asyncVerifyConfig: {
+                isAsyncVerify: true,
+                verifyTimeInSeconds: 900,
+                maxRetryCount: 3,
+                retryTimeInSeconds: 900,
+                isScatterEnabled: false,
+                maxScatterInSeconds: 0,
+            },
+            powVerifyConfig: {
+                isPOWVerify: false,
+            },
+            recurrenceConfig: {
+                isRecurring: false,
+                frequencyInDays: 1,
+                maxRecurrenceCount: 1,
+            },
+            flashTaskConfig: {
+                isFlashTask: false,
+            },
+            name: "Verify that you added review on Dappsheriff",
+            description: "Verify that you added review on Dappsheriff",
+            templateType: "DappsheriffReview",
+            xp: 20,
+            adminInputs: [
+                {
+                    key: "DAPPSHERIFF_SLUG",
+                    inputType: "INPUT_STRING",
+                    label: "URI SLUG",
+                    placeholder: "",
+                    value: "waves/3",
+                    _id: "65647f06731b793354cb23b1",
+                },
+            ],
+            isAttributionTask: true,
+            templateFamily: "LINEA/WEEK1",
+            totalUsersCompleted: 10156,
+            totalRecurringUsersCompleted: [],
+            requiredLogins: ["EVMWallet"],
+            isIntractTask: false,
+            isRequiredTask: false,
+            showOnChainHelper: false,
+            hasMaxRetryCheck: false,
+            hasRateLimitCheck: false,
+            isAddedLater: false,
+            isVisible: true,
+            isDeleted: false,
+            _id: "65647f06731b793354cb23b0",
+        },
+        verificationObject: {
+            questerWalletAddress: signer.address,
+        },
+    };
+    const preconditiontaskIds = [];
+    let verifyResp = await interact.verifyTask(
+        authInfo.token,
+        verifyPayload,
+        preconditiontaskIds,
+        "review",
+    );
+    if (verifyResp) {
+        log(c.green(verifyResp));
+    } else {
+        log(
+            randomChalk(
+                `[review] ${signer.address} started verification, come back in some time to claim points`,
+            ),
+        );
+    }
+}
+export async function claimWeek4Review(signer, intract = undefined, proxy = undefined) {
+    const campaignId = lineaWeekInfo.week4.id;
+    const taskId = lineaWeekInfo.week4.taskIds.postReview;
+    let interact = intract;
+    if (!intract) {
+        interact = new Interact(signer, proxy);
+        await interact.login();
+    }
+    const authInfo = await interact.authInfo;
+    await interact.claimTask(authInfo.token, campaignId, taskId, "Review task");
 }
 export async function registerScenario(signer, proxy = undefined) {
     await setWallet(signer, proxy);
@@ -1765,7 +1883,11 @@ export async function verifyTasksScenario(signer, week, proxy = undefined) {
             await verifyReview(signer, proxy);
             break;
         case "3":
-            await verifyAllWeek3(signer, proxy)
+            await verifyAllWeek3(signer, proxy);
+            break;
+        case "4":
+            await verifyWeek4Review(signer, undefined, proxy);
+            break;
     }
 }
 export async function claimTasksScenario(signer, week, proxy = undefined) {
@@ -1787,5 +1909,9 @@ export async function claimTasksScenario(signer, week, proxy = undefined) {
             break;
         case "3":
             await claimAllWeek3(signer, proxy);
+            break;
+        case "4":
+            await claimWeek4Review(signer, undefined, proxy);
+            break;
     }
 }

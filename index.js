@@ -125,6 +125,18 @@ switch (settings.mode) {
                 break;
         }
         break;
+    case "Week4":
+        switch (settings.task) {
+            case "ReviewDapp":
+                for (let i = 0; i < privates.length; i++) {
+                    let signer = new Wallet(privates[i]);
+                    log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
+                    await doReview(signer, proxies[i % proxies.length]);
+                    await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
+                }
+                break;
+        }
+        break;
     case "Intract":
         let intSet = new IntractSetup();
         let interactSettings = {};
@@ -179,4 +191,4 @@ switch (settings.mode) {
         }
         break;
 }
-await delayedPrint(randomChalk(`Everything comes to an end... At least ${c.bold("@findmeonchain")} can say goodbye!`));
+await delayedPrint(randomChalk(`Our road diverges, so ${c.bold("@findmeonchain")} says goodbye!`));

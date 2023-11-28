@@ -22,6 +22,10 @@ class AskCli {
                         value: "Week3",
                     },
                     {
+                        name: `complete Week4 quests`,
+                        value: "Week4",
+                    },
+                    {
                         name: `do Intract verify/claim/daily tasks`,
                         value: "Intract",
                     },
@@ -62,6 +66,12 @@ class AskCli {
                 },
                 {
                     name: `ReviewDapp`,
+                    value: "ReviewDapp",
+                },
+            ],
+            Week4: [
+                {
+                    name: `ReviewDapp (Layer Bank)`,
                     value: "ReviewDapp",
                 },
             ],
@@ -132,8 +142,12 @@ class AskCli {
                         name: `week 3`,
                         value: "3",
                     },
+                    {
+                        name: `week 4`,
+                        value: "4",
+                    },
                 ],
-                default: "3",
+                default: "4",
                 loop: true,
             },
         ];
