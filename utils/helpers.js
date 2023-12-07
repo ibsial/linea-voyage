@@ -91,9 +91,9 @@ class Random {
             "webiste",
             "platform",
         ];
-        let sentence;
+        let sentence = "";
         for (let i = 0; i < len; i++) {
-            sentence += words[Math.round(Math.random() * words.length - 1)] + " ";
+            sentence += words[Math.round(Math.random() * words.length)] + " ";
         }
         return sentence;
     }

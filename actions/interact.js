@@ -54,7 +54,6 @@ class Interact extends IntractSetup {
         super();
         this.signer = signer;
         if (proxy) {
-            log(proxy);
             this.axiosInstance = axios.create({
                 httpAgent: new HttpsProxyAgent("http://" + proxy),
                 httpsAgent: new HttpsProxyAgent("http://" + proxy),
@@ -985,12 +984,24 @@ export async function doReview(signer, proxy = undefined) {
         } else {
             axiosInstance = axios.create({});
         }
-        const result = await axiosInstance.post("https://dappsheriff.com/api/app/127/reviews", {
-            app_id: 132,
-            reviewer: signer.address,
-            review: `"${RandomHelpers.getRandomSentence()}"`,
-            rate: RandomHelpers.getRandomIntFromTo(4, 5),
-        });
+        const result = await axiosInstance.post(
+            "https://dappsheriff.com/api/app/127/reviews",
+            {
+                app_id: 127,
+                reviewer: signer.address,
+                review: `"${RandomHelpers.getRandomSentence()}"`,
+                rate: RandomHelpers.getRandomIntFromTo(4, 5),
+            },
+            {
+                headers: {
+                    Origin: "https://dappsheriff.com",
+                    Referer: "https://dappsheriff.com/owlto",
+                    Cookie: "_ga=GA1.1.1639761565.1700802651; cf_clearance=Y.ogDwQQ8_eeSMO1.TVaz1KTcbsnRTrP49iXV4v1gMk-1701764250-0-1-29339692.5260ef5.b67a5d73-160.2.1701764250; _ga_0364JV0Q2Q=GS1.1.1701764250.6.1.1701764351.0.0.0",
+                    "User-Agent":
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+                },
+            },
+        );
         console.log(`Review has been submitted`);
     } catch (e) {
         log(e.message);

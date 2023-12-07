@@ -26,6 +26,10 @@ class AskCli {
                         value: "Week4",
                     },
                     {
+                        name: `complete Week5 quests`,
+                        value: "Week5",
+                    },
+                    {
                         name: `do Intract verify/claim/daily tasks`,
                         value: "Intract",
                     },
@@ -75,6 +79,12 @@ class AskCli {
                     value: "ReviewDapp",
                 },
             ],
+            Week5: [
+                {
+                    name: "Add LP to Velocore USDT+ pool",
+                    value: "AddLP",
+                }
+            ]
         };
         const questions = [
             {

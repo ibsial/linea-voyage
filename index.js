@@ -24,6 +24,7 @@ import {
 } from "./actions/interact.js";
 import { bridgeOrbiter } from "./actions/thirdPartyBridges.js";
 import { makeIzumiSwap } from "./actions/izumiSwap.js";
+import { makeVelocoreSwap } from "./actions/velocore.js";
 
 const author = "@findmeonchain";
 let privates = await shuffleAndOverwriteKeys();
@@ -132,6 +133,18 @@ switch (settings.mode) {
                     let signer = new Wallet(privates[i]);
                     log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
                     await doReview(signer, proxies[i % proxies.length]);
+                    await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
+                }
+                break;
+        }
+        break;
+    case "Week5":
+        switch (settings.task) {
+            case "AddLP":
+                for (let i = 0; i < privates.length; i++) {
+                    let signer = new Wallet(privates[i]);
+                    log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
+                    await makeVelocoreSwap(signer);
                     await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
                 }
                 break;
