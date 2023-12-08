@@ -148,6 +148,14 @@ switch (settings.mode) {
                     await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
                 }
                 break;
+            case "ReviewDapp":
+                for (let i = 0; i < privates.length; i++) {
+                    let signer = new Wallet(privates[i]);
+                    log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
+                    await doReview(signer, proxies[i % proxies.length]);
+                    await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
+                }
+            break;
         }
         break;
     case "Intract":

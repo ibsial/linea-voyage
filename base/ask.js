@@ -83,7 +83,11 @@ class AskCli {
                 {
                     name: "Manage Velocore USDT+ liquidity pool",
                     value: "LP",
-                }
+                },
+                {
+                    name: "Review dapp (Velocore)",
+                    value: "ReviewDapp",
+                },
             ]
         };
         const questions = [
@@ -156,8 +160,12 @@ class AskCli {
                         name: `week 4`,
                         value: "4",
                     },
+                    {
+                        name: `week 5`,
+                        value: "5",
+                    },
                 ],
-                default: "4",
+                default: "5",
                 loop: true,
             },
         ];

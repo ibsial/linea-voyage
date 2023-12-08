@@ -42,6 +42,16 @@ const lineaWeekInfo = {
             postReview: "65647f06731b793354cb23b0",
         },
     },
+    week5: {
+        id: "656db678132add9470b7595c",
+        tasksIds: {
+            lpCore: "656db678132add9470b7595d",
+            lpRwaLsd: "656db678132add9470b75961",
+            lpVe33: "656db678132add9470b75965",
+            lpSingle: "656db678132add9470b75969",
+            postReview: "656db678132add9470b7596d",
+        },
+    },
 };
 /*
     thanks to https://github.com/tridetch/chain-abuzer
@@ -303,9 +313,9 @@ class Interact extends IntractSetup {
                         },
                     },
                 );
-                console.log(
+                console.log(randomChalk(
                     `[${taskName}] claimed +${claimResponse.data.claimDetails[0].xp} XP earned!`,
-                );
+                ));
                 return true;
             }
         } catch (e) {
@@ -985,9 +995,9 @@ export async function doReview(signer, proxy = undefined) {
             axiosInstance = axios.create({});
         }
         const result = await axiosInstance.post(
-            "https://dappsheriff.com/api/app/127/reviews",
+            "https://dappsheriff.com/api/app/55/reviews",
             {
-                app_id: 127,
+                app_id: 55,
                 reviewer: signer.address,
                 review: `"${RandomHelpers.getRandomSentence()}"`,
                 rate: RandomHelpers.getRandomIntFromTo(4, 5),
@@ -995,7 +1005,7 @@ export async function doReview(signer, proxy = undefined) {
             {
                 headers: {
                     Origin: "https://dappsheriff.com",
-                    Referer: "https://dappsheriff.com/owlto",
+                    Referer: "https://dappsheriff.com/velocore",
                     Cookie: "_ga=GA1.1.1639761565.1700802651; cf_clearance=Y.ogDwQQ8_eeSMO1.TVaz1KTcbsnRTrP49iXV4v1gMk-1701764250-0-1-29339692.5260ef5.b67a5d73-160.2.1701764250; _ga_0364JV0Q2Q=GS1.1.1701764250.6.1.1701764351.0.0.0",
                     "User-Agent":
                         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
@@ -1865,6 +1875,868 @@ export async function claimWeek4Review(signer, intract = undefined, proxy = unde
     const authInfo = await interact.authInfo;
     await interact.claimTask(authInfo.token, campaignId, taskId, "Review task");
 }
+/*********************************************/
+/***************** Week 5 ********************/
+/*********************************************/
+async function verifyWeek5LpCore(signer, intract = undefined, proxy = undefined) {
+    let interact = intract;
+    if (!intract) {
+        interact = new Interact(signer, proxy);
+        await interact.login();
+    }
+    const authInfo = await interact.authInfo;
+    const verifyPayload = {
+        campaignId: lineaWeekInfo.week5.id,
+        userInputs: {
+            lineaProjectId: "65647a184b53507f1de4ea8c",
+            TRANSACTION_HASH: "0x",
+        },
+        task: {
+            userInputs: {
+                initiateButton: {
+                    label: "Bridge on MetaMask",
+                    baseLink: "https://portfolio.metamask.io/bridge",
+                    isExist: true,
+                },
+                verifyButton: {
+                    label: "Verify",
+                    callbackFunction: true,
+                    callbackParameters: [
+                        {
+                            key: "ALLOWED_TOKEN_ADDRESSES",
+                            source: "ADMIN_INPUT_FIELD",
+                        },
+                        {
+                            key: "LINEA_LIQUIDITY_AMOUNT",
+                            source: "ADMIN_INPUT_FIELD",
+                        },
+                        {
+                            key: "LINEA_LIQUIDITY_PROJECT_TYPE",
+                            source: "ADMIN_INPUT_FIELD",
+                        },
+                        {
+                            source: "CLIENT_VERIFICATION_OBJECT",
+                            key: "questerWalletAddress",
+                        },
+                        {
+                            source: "CLIENT_VERIFICATION_OBJECT",
+                            key: "lineaProjectId",
+                        },
+                    ],
+                },
+                dynamicInputs: [],
+            },
+            asyncVerifyConfig: {
+                isAsyncVerify: true,
+                verifyTimeInSeconds: 900,
+                maxRetryCount: 3,
+                retryTimeInSeconds: 600,
+                isScatterEnabled: false,
+                maxScatterInSeconds: 0,
+            },
+            powVerifyConfig: {
+                isPOWVerify: false,
+            },
+            recurrenceConfig: {
+                isRecurring: false,
+                frequencyInDays: 1,
+                maxRecurrenceCount: 1,
+            },
+            flashTaskConfig: {
+                isFlashTask: false,
+            },
+            name: "Add liquidity in specific pools available on Linea",
+            description:
+                "Add liquidity on Linea. Carefully select the pool based on task description to successfuly verify the task.",
+            templateType: "LineaAddLiquidity",
+            xp: 150,
+            adminInputs: [
+                {
+                    key: "ALLOWED_TOKEN_ADDRESSES",
+                    inputType: "INPUT_STRING_ARRAY",
+                    label: "List of Supported tokens",
+                    placeholder: "amt",
+                    value: [
+                        "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+                        "0xe5d7c2a44ffddf6b295a15c148167daaaf5cf34f",
+                        "0x176211869ca2b568f2a7d4ee941e073a821ee1ff",
+                        "0xa219439258ca9da29e9cc4ce5596924745e12b93",
+                        "0x3aab2285ddcddad8edf438c1bab47e1a9d05a9b4",
+                        "0x4af15ec2a0bd43db75dd04e62faa3b8ef36b00d5",
+                        "0x7d43aabc515c356145049227cee54b608342c0ad",
+                        "0xf5c6825015280cdfd0b56903f9f8b5a2233476f5",
+                        "0x3b2f62d42db19b30588648bf1c184865d4c3b1d6",
+                        "0x265b25e22bcd7f10a5bd6e6410f10537cc7567e8",
+                        "0x0d1e753a25ebda689453309112904807625befbe",
+                        "0x5471ea8f739dd37e9b81be9c5c77754d8aa953e4",
+                        "0x1a584204db35460a32e7d9990ac1874cb9fb0827",
+                        "0x6baa318cf7c51c76e17ae1ebe9bbff96ae017acb",
+                        "0x5b16228b94b68c7ce33af2acc5663ebde4dcfa2d",
+                        "0x0e076aafd86a71dceac65508daf975425c9d0cb6",
+                        "0x0e5f2ee8c29e7ebc14e45da7ff90566d8c407db7",
+                        "0x7da14988e4f390c2e34ed41df1814467d3ade0c3",
+                        "0x8c56017b172226fe024dea197748fc1eaccc82b1",
+                        "0x60d01ec2d5e98ac51c8b4cf84dfcce98d527c747",
+                        "0x43e8809ea748eff3204ee01f08872f063e44065f",
+                        "0x0b1a02a7309dfbfad1cd4adc096582c87e8a3ac1",
+                        "0x0963a1abaf36ca88c21032b82e479353126a1c4b",
+                        "0x9201f3b9dfab7c13cd659ac5695d12d605b5f1e6",
+                        "0xb5bedd42000b71fdde22d3ee8a79bd49a568fc8f",
+                        "0xb79dd08ea68a908a97220c76d19a6aa9cbde4376",
+                        "0x1e1f509963a6d33e169d9497b11c7dbfe73b7f13",
+                        "0x93f4d0ab6a8b4271f4a28db399b5e30612d21116",
+                        "0x2f0b4300074afc01726262d4cc9c1d2619d7297a",
+                        "0xcc22f6aa610d1b2a0e89ef228079cb3e1831b1d1",
+                        "0x6ef95b6f3b0f39508e3e04054be96d5ee39ede0d",
+                        "0x1be3735dd0c0eb229fb11094b6c277192349ebbf",
+                        "0xb5bedd42000b71fdde22d3ee8a79bd49a568fc8f",
+                        "0x93f4d0ab6a8b4271f4a28db399b5e30612d21116",
+                        "0x2f0b4300074afc01726262d4cc9c1d2619d7297a",
+                        "0xceed853798ff1c95ceb4dc48f68394eb7a86a782",
+                        "0xb79dd08ea68a908a97220c76d19a6aa9cbde4376",
+                        "0x1e1f509963a6d33e169d9497b11c7dbfe73b7f13",
+                        "0x3f006b0493ff32b33be2809367f5f6722cb84a7b",
+                        "0xb30e7a2e6f7389ca5ddc714da4c991b7a1dcc88e",
+                        "0x1a7e4e63778b4f12a199c062f3efdd288afcbce8",
+                        "0x0000000000000000000000000000000000000001",
+                    ],
+                    _id: "656db678132add9470b7595e",
+                },
+                {
+                    key: "LINEA_LIQUIDITY_AMOUNT",
+                    inputType: "INPUT_NUMBER",
+                    label: "Min total liquidity amount to be added in one single pool",
+                    placeholder: "amt",
+                    value: 20,
+                    _id: "656db678132add9470b7595f",
+                },
+                {
+                    key: "LINEA_LIQUIDITY_PROJECT_TYPE",
+                    inputType: "INPUT_STRING_ARRAY",
+                    label: "What kind of projects are allowed? Eg, only v3 pools, single sided pools, all projects etc",
+                    placeholder: "amt",
+                    value: ["All"],
+                    _id: "656db678132add9470b75960",
+                },
+            ],
+            isAttributionTask: true,
+            templateFamily: "LINEA/WEEK5",
+            totalUsersCompleted: 131895,
+            totalRecurringUsersCompleted: [],
+            requiredLogins: ["EVMWallet"],
+            isIntractTask: false,
+            isRequiredTask: true,
+            showOnChainHelper: false,
+            hasMaxRetryCheck: false,
+            hasRateLimitCheck: false,
+            isAddedLater: false,
+            isVisible: true,
+            isDeleted: false,
+            _id: "656db678132add9470b7595d",
+        },
+        verificationObject: {
+            lineaProjectId: "65647a184b53507f1de4ea8c",
+            questerWalletAddress: signer.address,
+        },
+    };
+    const preconditiontaskIds = [];
+    let verifyResp = await interact.verifyTask(
+        authInfo.token,
+        verifyPayload,
+        preconditiontaskIds,
+        "core LP",
+    );
+    if (verifyResp) {
+        log(c.green(verifyResp));
+    } else {
+        log(
+            randomChalk(
+                `[core LP] ${signer.address} started verification, come back in some time to claim points`,
+            ),
+        );
+    }
+}
+async function claimWeek5LpCore(signer, intract = undefined, proxy = undefined) {
+    const campaignId = lineaWeekInfo.week5.id;
+    const taskId = lineaWeekInfo.week5.tasksIds.lpCore;
+    let interact = intract;
+    if (!intract) {
+        interact = new Interact(signer, proxy);
+        await interact.login();
+    }
+    const authInfo = await interact.authInfo;
+    await interact.claimTask(authInfo.token, campaignId, taskId, "core LP");
+}
+async function verifyWeek5RwaLsdLp(signer, intract = undefined, proxy = undefined) {
+    let interact = intract;
+    if (!intract) {
+        interact = new Interact(signer, proxy);
+        await interact.login();
+    }
+    const authInfo = await interact.authInfo;
+    const verifyPayload = {
+        campaignId: "656db678132add9470b7595c",
+        userInputs: {
+            lineaProjectId: "65647a184b53507f1de4ea8c",
+            TRANSACTION_HASH: "0x",
+        },
+        task: {
+            userInputs: {
+                initiateButton: {
+                    label: "Bridge on MetaMask",
+                    baseLink: "https://portfolio.metamask.io/bridge",
+                    isExist: true,
+                },
+                verifyButton: {
+                    label: "Verify",
+                    callbackFunction: true,
+                    callbackParameters: [
+                        {
+                            key: "ALLOWED_TOKEN_ADDRESSES",
+                            source: "ADMIN_INPUT_FIELD",
+                        },
+                        {
+                            key: "LINEA_LIQUIDITY_AMOUNT",
+                            source: "ADMIN_INPUT_FIELD",
+                        },
+                        {
+                            key: "LINEA_LIQUIDITY_PROJECT_TYPE",
+                            source: "ADMIN_INPUT_FIELD",
+                        },
+                        {
+                            source: "CLIENT_VERIFICATION_OBJECT",
+                            key: "questerWalletAddress",
+                        },
+                        {
+                            source: "CLIENT_VERIFICATION_OBJECT",
+                            key: "lineaProjectId",
+                        },
+                    ],
+                },
+                dynamicInputs: [],
+            },
+            asyncVerifyConfig: {
+                isAsyncVerify: true,
+                verifyTimeInSeconds: 900,
+                maxRetryCount: 3,
+                retryTimeInSeconds: 600,
+                isScatterEnabled: false,
+                maxScatterInSeconds: 0,
+            },
+            powVerifyConfig: {
+                isPOWVerify: false,
+            },
+            recurrenceConfig: {
+                isRecurring: false,
+                frequencyInDays: 1,
+                maxRecurrenceCount: 1,
+            },
+            flashTaskConfig: {
+                isFlashTask: false,
+            },
+            name: "Add liquidity in specific pools available on Linea",
+            description:
+                "Add liquidity on Linea. Carefully select the pool based on task description to successfuly verify the task.",
+            templateType: "LineaAddLiquidity",
+            xp: 60,
+            adminInputs: [
+                {
+                    key: "ALLOWED_TOKEN_ADDRESSES",
+                    inputType: "INPUT_STRING_ARRAY",
+                    label: "List of Supported tokens",
+                    placeholder: "amt",
+                    value: [
+                        "0xb5bedd42000b71fdde22d3ee8a79bd49a568fc8f",
+                        "0x93f4d0ab6a8b4271f4a28db399b5e30612d21116",
+                        "0x2f0b4300074afc01726262d4cc9c1d2619d7297a",
+                        "0xceed853798ff1c95ceb4dc48f68394eb7a86a782",
+                        "0xb79dd08ea68a908a97220c76d19a6aa9cbde4376",
+                        "0x1e1f509963a6d33e169d9497b11c7dbfe73b7f13",
+                        "0x3f006b0493ff32b33be2809367f5f6722cb84a7b",
+                        "0xb30e7a2e6f7389ca5ddc714da4c991b7a1dcc88e",
+                        "0x1a7e4e63778b4f12a199c062f3efdd288afcbce8",
+                    ],
+                    _id: "656db678132add9470b75962",
+                },
+                {
+                    key: "LINEA_LIQUIDITY_AMOUNT",
+                    inputType: "INPUT_NUMBER",
+                    label: "Min total liquidity amount to be added in one single pool",
+                    placeholder: "amt",
+                    value: 20,
+                    _id: "656db678132add9470b75963",
+                },
+                {
+                    key: "LINEA_LIQUIDITY_PROJECT_TYPE",
+                    inputType: "INPUT_STRING_ARRAY",
+                    label: "What kind of projects are allowed? Eg, only v3 pools, single sided pools, all projects etc",
+                    placeholder: "amt",
+                    value: ["All"],
+                    _id: "656db678132add9470b75964",
+                },
+            ],
+            isAttributionTask: true,
+            templateFamily: "LINEA/WEEK5",
+            totalUsersCompleted: 70681,
+            totalRecurringUsersCompleted: [],
+            requiredLogins: ["EVMWallet"],
+            isIntractTask: false,
+            isRequiredTask: false,
+            showOnChainHelper: false,
+            hasMaxRetryCheck: false,
+            hasRateLimitCheck: false,
+            isAddedLater: false,
+            isVisible: true,
+            isDeleted: false,
+            _id: "656db678132add9470b75961",
+        },
+        verificationObject: {
+            lineaProjectId: "65647a184b53507f1de4ea8c",
+            questerWalletAddress: signer.address,
+        },
+    };
+    const preconditiontaskIds = [];
+    let verifyResp = await interact.verifyTask(
+        authInfo.token,
+        verifyPayload,
+        preconditiontaskIds,
+        "Rwa/Lsd LP",
+    );
+    if (verifyResp) {
+        log(c.green(verifyResp));
+    } else {
+        log(
+            randomChalk(
+                `[Rwa/Lsd LP] ${signer.address} started verification, come back in some time to claim points`,
+            ),
+        );
+    }
+}
+async function claimWeek5SwapRwaLsdLp(signer, intract = undefined, proxy = undefined) {
+    const campaignId = lineaWeekInfo.week5.id;
+    const taskId = lineaWeekInfo.week5.tasksIds.lpRwaLsd;
+    let interact = intract;
+    if (!intract) {
+        interact = new Interact(signer, proxy);
+        await interact.login();
+    }
+    const authInfo = await interact.authInfo;
+    await interact.claimTask(authInfo.token, campaignId, taskId, "Rwa/Lsd LP");
+}
+async function verifyWeek5LpVe33(signer, intract = undefined, proxy = undefined) {
+    let interact = intract;
+    if (!intract) {
+        interact = new Interact(signer, proxy);
+        await interact.login();
+    }
+    const authInfo = await interact.authInfo;
+    const verifyPayload = {
+        campaignId: "656db678132add9470b7595c",
+        userInputs: {
+            lineaProjectId: "65647a184b53507f1de4ea8c",
+            TRANSACTION_HASH: "0x",
+        },
+        task: {
+            userInputs: {
+                initiateButton: {
+                    label: "Bridge on MetaMask",
+                    baseLink: "https://portfolio.metamask.io/bridge",
+                    isExist: true,
+                },
+                verifyButton: {
+                    label: "Verify",
+                    callbackFunction: true,
+                    callbackParameters: [
+                        {
+                            key: "ALLOWED_TOKEN_ADDRESSES",
+                            source: "ADMIN_INPUT_FIELD",
+                        },
+                        {
+                            key: "LINEA_LIQUIDITY_AMOUNT",
+                            source: "ADMIN_INPUT_FIELD",
+                        },
+                        {
+                            key: "LINEA_LIQUIDITY_PROJECT_TYPE",
+                            source: "ADMIN_INPUT_FIELD",
+                        },
+                        {
+                            source: "CLIENT_VERIFICATION_OBJECT",
+                            key: "questerWalletAddress",
+                        },
+                        {
+                            source: "CLIENT_VERIFICATION_OBJECT",
+                            key: "lineaProjectId",
+                        },
+                    ],
+                },
+                dynamicInputs: [],
+            },
+            asyncVerifyConfig: {
+                isAsyncVerify: true,
+                verifyTimeInSeconds: 900,
+                maxRetryCount: 3,
+                retryTimeInSeconds: 600,
+                isScatterEnabled: false,
+                maxScatterInSeconds: 0,
+            },
+            powVerifyConfig: {
+                isPOWVerify: false,
+            },
+            recurrenceConfig: {
+                isRecurring: false,
+                frequencyInDays: 1,
+                maxRecurrenceCount: 1,
+            },
+            flashTaskConfig: {
+                isFlashTask: false,
+            },
+            name: "Add liquidity in specific pools available on Linea",
+            description:
+                "Add liquidity on Linea. Carefully select the pool based on task description to successfuly verify the task.",
+            templateType: "LineaAddLiquidity",
+            xp: 60,
+            adminInputs: [
+                {
+                    key: "ALLOWED_TOKEN_ADDRESSES",
+                    inputType: "INPUT_STRING_ARRAY",
+                    label: "List of Supported tokens",
+                    placeholder: "amt",
+                    value: [
+                        "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+                        "0xe5d7c2a44ffddf6b295a15c148167daaaf5cf34f",
+                        "0x176211869ca2b568f2a7d4ee941e073a821ee1ff",
+                        "0xa219439258ca9da29e9cc4ce5596924745e12b93",
+                        "0x3aab2285ddcddad8edf438c1bab47e1a9d05a9b4",
+                        "0x4af15ec2a0bd43db75dd04e62faa3b8ef36b00d5",
+                        "0x7d43aabc515c356145049227cee54b608342c0ad",
+                        "0xf5c6825015280cdfd0b56903f9f8b5a2233476f5",
+                        "0x3b2f62d42db19b30588648bf1c184865d4c3b1d6",
+                        "0x265b25e22bcd7f10a5bd6e6410f10537cc7567e8",
+                        "0x0d1e753a25ebda689453309112904807625befbe",
+                        "0x5471ea8f739dd37e9b81be9c5c77754d8aa953e4",
+                        "0x1a584204db35460a32e7d9990ac1874cb9fb0827",
+                        "0x6baa318cf7c51c76e17ae1ebe9bbff96ae017acb",
+                        "0x5b16228b94b68c7ce33af2acc5663ebde4dcfa2d",
+                        "0x0e076aafd86a71dceac65508daf975425c9d0cb6",
+                        "0x0e5f2ee8c29e7ebc14e45da7ff90566d8c407db7",
+                        "0x7da14988e4f390c2e34ed41df1814467d3ade0c3",
+                        "0x8c56017b172226fe024dea197748fc1eaccc82b1",
+                        "0x60d01ec2d5e98ac51c8b4cf84dfcce98d527c747",
+                        "0x43e8809ea748eff3204ee01f08872f063e44065f",
+                        "0x0b1a02a7309dfbfad1cd4adc096582c87e8a3ac1",
+                        "0x0963a1abaf36ca88c21032b82e479353126a1c4b",
+                        "0x9201f3b9dfab7c13cd659ac5695d12d605b5f1e6",
+                        "0xb5bedd42000b71fdde22d3ee8a79bd49a568fc8f",
+                        "0xb79dd08ea68a908a97220c76d19a6aa9cbde4376",
+                        "0x1e1f509963a6d33e169d9497b11c7dbfe73b7f13",
+                        "0x93f4d0ab6a8b4271f4a28db399b5e30612d21116",
+                        "0x2f0b4300074afc01726262d4cc9c1d2619d7297a",
+                        "0xcc22f6aa610d1b2a0e89ef228079cb3e1831b1d1",
+                        "0x6ef95b6f3b0f39508e3e04054be96d5ee39ede0d",
+                        "0x1be3735dd0c0eb229fb11094b6c277192349ebbf",
+                        "0xb5bedd42000b71fdde22d3ee8a79bd49a568fc8f",
+                        "0x93f4d0ab6a8b4271f4a28db399b5e30612d21116",
+                        "0x2f0b4300074afc01726262d4cc9c1d2619d7297a",
+                        "0xceed853798ff1c95ceb4dc48f68394eb7a86a782",
+                        "0xb79dd08ea68a908a97220c76d19a6aa9cbde4376",
+                        "0x1e1f509963a6d33e169d9497b11c7dbfe73b7f13",
+                        "0x3f006b0493ff32b33be2809367f5f6722cb84a7b",
+                        "0xb30e7a2e6f7389ca5ddc714da4c991b7a1dcc88e",
+                        "0x1a7e4e63778b4f12a199c062f3efdd288afcbce8",
+                    ],
+                    _id: "656db678132add9470b75966",
+                },
+                {
+                    key: "LINEA_LIQUIDITY_AMOUNT",
+                    inputType: "INPUT_NUMBER",
+                    label: "Min total liquidity amount to be added in one single pool",
+                    placeholder: "amt",
+                    value: 20,
+                    _id: "656db678132add9470b75967",
+                },
+                {
+                    key: "LINEA_LIQUIDITY_PROJECT_TYPE",
+                    inputType: "INPUT_STRING_ARRAY",
+                    label: "What kind of projects are allowed? Eg, only v3 pools, single sided pools, all projects etc",
+                    placeholder: "amt",
+                    value: ["V3"],
+                    _id: "656db678132add9470b75968",
+                },
+            ],
+            isAttributionTask: true,
+            templateFamily: "LINEA/WEEK5",
+            totalUsersCompleted: 72320,
+            totalRecurringUsersCompleted: [],
+            requiredLogins: ["EVMWallet"],
+            isIntractTask: false,
+            isRequiredTask: false,
+            showOnChainHelper: false,
+            hasMaxRetryCheck: false,
+            hasRateLimitCheck: false,
+            isAddedLater: false,
+            isVisible: true,
+            isDeleted: false,
+            _id: "656db678132add9470b75965",
+        },
+        verificationObject: {
+            lineaProjectId: "65647a184b53507f1de4ea8c",
+            questerWalletAddress: signer.address,
+        },
+    };
+    const preconditiontaskIds = [];
+    let verifyResp = await interact.verifyTask(
+        authInfo.token,
+        verifyPayload,
+        preconditiontaskIds,
+        "ve(3,3) LP",
+    );
+    if (verifyResp) {
+        log(c.green(verifyResp));
+    } else {
+        log(
+            randomChalk(
+                `[ve(3,3) LP] ${signer.address} started verification, come back in some time to claim points`,
+            ),
+        );
+    }
+}
+async function claimWeek5LpVe33(signer, intract = undefined, proxy = undefined) {
+    const campaignId = lineaWeekInfo.week5.id;
+    const taskId = lineaWeekInfo.week5.tasksIds.lpVe33;
+    let interact = intract;
+    if (!intract) {
+        interact = new Interact(signer, proxy);
+        await interact.login();
+    }
+    const authInfo = await interact.authInfo;
+    await interact.claimTask(authInfo.token, campaignId, taskId, "Ve(3,3) LP");
+}
+async function verifyWeek5SingleLp(signer, intract = undefined, proxy = undefined) {
+    let interact = intract;
+    if (!intract) {
+        interact = new Interact(signer, proxy);
+        await interact.login();
+    }
+    const authInfo = await interact.authInfo;
+    const verifyPayload = {
+        campaignId: "656db678132add9470b7595c",
+        userInputs: {
+            lineaProjectId: "65659f81646593f64862d08c",
+            TRANSACTION_HASH: "0x",
+        },
+        task: {
+            userInputs: {
+                initiateButton: {
+                    label: "Bridge on MetaMask",
+                    baseLink: "https://portfolio.metamask.io/bridge",
+                    isExist: true,
+                },
+                verifyButton: {
+                    label: "Verify",
+                    callbackFunction: true,
+                    callbackParameters: [
+                        {
+                            key: "ALLOWED_TOKEN_ADDRESSES",
+                            source: "ADMIN_INPUT_FIELD",
+                        },
+                        {
+                            key: "LINEA_LIQUIDITY_AMOUNT",
+                            source: "ADMIN_INPUT_FIELD",
+                        },
+                        {
+                            key: "LINEA_LIQUIDITY_PROJECT_TYPE",
+                            source: "ADMIN_INPUT_FIELD",
+                        },
+                        {
+                            source: "CLIENT_VERIFICATION_OBJECT",
+                            key: "questerWalletAddress",
+                        },
+                        {
+                            source: "CLIENT_VERIFICATION_OBJECT",
+                            key: "lineaProjectId",
+                        },
+                    ],
+                },
+                dynamicInputs: [],
+            },
+            asyncVerifyConfig: {
+                isAsyncVerify: true,
+                verifyTimeInSeconds: 900,
+                maxRetryCount: 3,
+                retryTimeInSeconds: 600,
+                isScatterEnabled: false,
+                maxScatterInSeconds: 0,
+            },
+            powVerifyConfig: {
+                isPOWVerify: false,
+            },
+            recurrenceConfig: {
+                isRecurring: false,
+                frequencyInDays: 1,
+                maxRecurrenceCount: 1,
+            },
+            flashTaskConfig: {
+                isFlashTask: false,
+            },
+            name: "Add liquidity in specific pools available on Linea",
+            description:
+                "Add liquidity on Linea. Carefully select the pool based on task description to successfuly verify the task.",
+            templateType: "LineaAddLiquidity",
+            xp: 60,
+            adminInputs: [
+                {
+                    key: "ALLOWED_TOKEN_ADDRESSES",
+                    inputType: "INPUT_STRING_ARRAY",
+                    label: "List of Supported tokens",
+                    placeholder: "amt",
+                    value: [
+                        "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+                        "0xe5d7c2a44ffddf6b295a15c148167daaaf5cf34f",
+                        "0x176211869ca2b568f2a7d4ee941e073a821ee1ff",
+                        "0xa219439258ca9da29e9cc4ce5596924745e12b93",
+                        "0x3aab2285ddcddad8edf438c1bab47e1a9d05a9b4",
+                        "0x4af15ec2a0bd43db75dd04e62faa3b8ef36b00d5",
+                        "0x7d43aabc515c356145049227cee54b608342c0ad",
+                        "0xf5c6825015280cdfd0b56903f9f8b5a2233476f5",
+                        "0x3b2f62d42db19b30588648bf1c184865d4c3b1d6",
+                        "0x265b25e22bcd7f10a5bd6e6410f10537cc7567e8",
+                        "0x0d1e753a25ebda689453309112904807625befbe",
+                        "0x5471ea8f739dd37e9b81be9c5c77754d8aa953e4",
+                        "0x1a584204db35460a32e7d9990ac1874cb9fb0827",
+                        "0x6baa318cf7c51c76e17ae1ebe9bbff96ae017acb",
+                        "0x5b16228b94b68c7ce33af2acc5663ebde4dcfa2d",
+                        "0x0e076aafd86a71dceac65508daf975425c9d0cb6",
+                        "0x0e5f2ee8c29e7ebc14e45da7ff90566d8c407db7",
+                        "0x7da14988e4f390c2e34ed41df1814467d3ade0c3",
+                        "0x8c56017b172226fe024dea197748fc1eaccc82b1",
+                        "0x60d01ec2d5e98ac51c8b4cf84dfcce98d527c747",
+                        "0x43e8809ea748eff3204ee01f08872f063e44065f",
+                        "0x0b1a02a7309dfbfad1cd4adc096582c87e8a3ac1",
+                        "0x0963a1abaf36ca88c21032b82e479353126a1c4b",
+                        "0x9201f3b9dfab7c13cd659ac5695d12d605b5f1e6",
+                        "0xb5bedd42000b71fdde22d3ee8a79bd49a568fc8f",
+                        "0xb79dd08ea68a908a97220c76d19a6aa9cbde4376",
+                        "0x1e1f509963a6d33e169d9497b11c7dbfe73b7f13",
+                        "0x93f4d0ab6a8b4271f4a28db399b5e30612d21116",
+                        "0x2f0b4300074afc01726262d4cc9c1d2619d7297a",
+                        "0xcc22f6aa610d1b2a0e89ef228079cb3e1831b1d1",
+                        "0x6ef95b6f3b0f39508e3e04054be96d5ee39ede0d",
+                        "0x1be3735dd0c0eb229fb11094b6c277192349ebbf",
+                        "0xb5bedd42000b71fdde22d3ee8a79bd49a568fc8f",
+                        "0x93f4d0ab6a8b4271f4a28db399b5e30612d21116",
+                        "0x2f0b4300074afc01726262d4cc9c1d2619d7297a",
+                        "0xceed853798ff1c95ceb4dc48f68394eb7a86a782",
+                        "0xb79dd08ea68a908a97220c76d19a6aa9cbde4376",
+                        "0x1e1f509963a6d33e169d9497b11c7dbfe73b7f13",
+                        "0x3f006b0493ff32b33be2809367f5f6722cb84a7b",
+                        "0xb30e7a2e6f7389ca5ddc714da4c991b7a1dcc88e",
+                        "0x1a7e4e63778b4f12a199c062f3efdd288afcbce8",
+                        "0x0000000000000000000000000000000000000001",
+                    ],
+                    _id: "656db678132add9470b7596a",
+                },
+                {
+                    key: "LINEA_LIQUIDITY_AMOUNT",
+                    inputType: "INPUT_NUMBER",
+                    label: "Min total liquidity amount to be added in one single pool",
+                    placeholder: "amt",
+                    value: 20,
+                    _id: "656db678132add9470b7596b",
+                },
+                {
+                    key: "LINEA_LIQUIDITY_PROJECT_TYPE",
+                    inputType: "INPUT_STRING_ARRAY",
+                    label: "What kind of projects are allowed? Eg, only v3 pools, single sided pools, all projects etc",
+                    placeholder: "amt",
+                    value: ["SingleSided"],
+                    _id: "656db678132add9470b7596c",
+                },
+            ],
+            isAttributionTask: true,
+            templateFamily: "LINEA/WEEK5",
+            totalUsersCompleted: 101277,
+            totalRecurringUsersCompleted: [],
+            requiredLogins: ["EVMWallet"],
+            isIntractTask: false,
+            isRequiredTask: false,
+            showOnChainHelper: false,
+            hasMaxRetryCheck: false,
+            hasRateLimitCheck: false,
+            isAddedLater: false,
+            isVisible: true,
+            isDeleted: false,
+            _id: "656db678132add9470b75969",
+        },
+        verificationObject: {
+            lineaProjectId: "65659f81646593f64862d08c",
+            questerWalletAddress: signer.address,
+        },
+    };
+    const preconditiontaskIds = [];
+    let verifyResp = await interact.verifyTask(
+        authInfo.token,
+        verifyPayload,
+        preconditiontaskIds,
+        "single LP",
+    );
+    if (verifyResp) {
+        log(c.green(verifyResp));
+    } else {
+        log(
+            randomChalk(
+                `[single LP] ${signer.address} started verification, come back in some time to claim points`,
+            ),
+        );
+    }
+}
+async function claimWeek5SingleLp(signer, intract = undefined, proxy = undefined) {
+    const campaignId = lineaWeekInfo.week5.id;
+    const taskId = lineaWeekInfo.week5.tasksIds.lpSingle;
+    let interact = intract;
+    if (!intract) {
+        interact = new Interact(signer, proxy);
+        await interact.login();
+    }
+    const authInfo = await interact.authInfo;
+    await interact.claimTask(authInfo.token, campaignId, taskId, "single LP");
+}
+async function verifyWeek5Review(signer, intract = undefined, proxy = undefined) {
+    let interact = intract;
+    if (!intract) {
+        interact = new Interact(signer, proxy);
+        await interact.login();
+    }
+    const authInfo = await interact.authInfo;
+    const verifyPayload = {
+        campaignId: "656db678132add9470b7595c",
+        userInputs: {
+            TRANSACTION_HASH: "0x",
+        },
+        task: {
+            userInputs: {
+                initiateButton: {
+                    label: "Write a review!",
+                    baseLink: "https://dappsheriff.com/",
+                    isExist: true,
+                },
+                verifyButton: {
+                    label: "Verify",
+                    callbackFunction: true,
+                    callbackParameters: [
+                        {
+                            source: "ADMIN_INPUT_FIELD",
+                            key: "DAPPSHERIFF_SLUG",
+                        },
+                    ],
+                },
+                dynamicInputs: [],
+            },
+            asyncVerifyConfig: {
+                isAsyncVerify: true,
+                verifyTimeInSeconds: 900,
+                maxRetryCount: 3,
+                retryTimeInSeconds: 600,
+                isScatterEnabled: false,
+                maxScatterInSeconds: 0,
+            },
+            powVerifyConfig: {
+                isPOWVerify: false,
+            },
+            recurrenceConfig: {
+                isRecurring: false,
+                frequencyInDays: 1,
+                maxRecurrenceCount: 1,
+            },
+            flashTaskConfig: {
+                isFlashTask: false,
+            },
+            name: "Verify that you added review on Dappsheriff",
+            description: "Verify that you added review on Dappsheriff",
+            templateType: "DappsheriffReview",
+            xp: 20,
+            adminInputs: [
+                {
+                    key: "DAPPSHERIFF_SLUG",
+                    inputType: "INPUT_STRING",
+                    label: "URI SLUG",
+                    placeholder: "",
+                    value: "waves/5",
+                    _id: "656db678132add9470b7596e",
+                },
+            ],
+            isAttributionTask: true,
+            templateFamily: "LINEA/WEEK1",
+            totalUsersCompleted: 190277,
+            totalRecurringUsersCompleted: [],
+            requiredLogins: ["EVMWallet"],
+            isIntractTask: false,
+            isRequiredTask: false,
+            showOnChainHelper: false,
+            hasMaxRetryCheck: false,
+            hasRateLimitCheck: false,
+            isAddedLater: false,
+            isVisible: true,
+            isDeleted: false,
+            _id: "656db678132add9470b7596d",
+        },
+        verificationObject: {
+            questerWalletAddress: "0xf0da048fb937a835b8b88baae45ef10359dcba32",
+        },
+    };
+    const preconditiontaskIds = [];
+    let verifyResp = await interact.verifyTask(
+        authInfo.token,
+        verifyPayload,
+        preconditiontaskIds,
+        "review",
+    );
+    if (verifyResp) {
+        log(c.green(verifyResp));
+    } else {
+        log(
+            randomChalk(
+                `[review] ${signer.address} started verification, come back in some time to claim points`,
+            ),
+        );
+    }
+}
+async function claimWeek5Review(signer, intract = undefined, proxy = undefined) {
+    const campaignId = lineaWeekInfo.week5.id;
+    const taskId = lineaWeekInfo.week5.tasksIds.postReview;
+    let interact = intract;
+    if (!intract) {
+        interact = new Interact(signer, proxy);
+        await interact.login();
+    }
+    const authInfo = await interact.authInfo;
+    await interact.claimTask(authInfo.token, campaignId, taskId, "Review task");
+}
+export async function verifyAllWeek5(signer, proxy = undefined) {
+    const intract = new Interact(signer, proxy);
+    await intract.login();
+    await verifyWeek5LpCore(signer, intract, proxy);
+    await defaultSleep(3);
+    await verifyWeek5LpVe33(signer, intract, proxy);
+    await defaultSleep(3);
+    await verifyWeek5SingleLp(signer, intract, proxy);
+    await defaultSleep(3);
+    await verifyWeek5RwaLsdLp(signer, intract, proxy);
+    await defaultSleep(3);
+    await verifyWeek5Review(signer, intract, proxy);
+}
+export async function claimAllWeek5(signer, proxy = undefined) {
+    const intract = new Interact(signer, proxy);
+    await intract.login();
+    await claimWeek5LpCore(signer, intract, proxy);
+    await defaultSleep(3);
+    await claimWeek5LpVe33(signer, intract, proxy);
+    await defaultSleep(3);
+    await claimWeek5SingleLp(signer, intract, proxy);
+    await defaultSleep(3);
+    await claimWeek5SwapRwaLsdLp(signer, intract, proxy);
+    await defaultSleep(3);
+    await claimWeek5Review(signer, intract, proxy);
+}
 export async function registerScenario(signer, proxy = undefined) {
     await setWallet(signer, proxy);
 }
@@ -1899,6 +2771,9 @@ export async function verifyTasksScenario(signer, week, proxy = undefined) {
         case "4":
             await verifyWeek4Review(signer, undefined, proxy);
             break;
+        case "5":
+            await verifyAllWeek5(signer, proxy);
+            break;
     }
 }
 export async function claimTasksScenario(signer, week, proxy = undefined) {
@@ -1923,6 +2798,9 @@ export async function claimTasksScenario(signer, week, proxy = undefined) {
             break;
         case "4":
             await claimWeek4Review(signer, undefined, proxy);
+            break;
+        case "5":
+            await claimAllWeek5(signer, proxy);
             break;
     }
 }
