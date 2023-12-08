@@ -142,6 +142,7 @@ switch (settings.mode) {
         switch (settings.task) {
             case "LP":
                 for (let i = 0; i < privates.length; i++) {
+                    await checkGwei(goodGwei);
                     let signer = new Wallet(privates[i]);
                     log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
                     await makeVelocoreSwap(signer);
