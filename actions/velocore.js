@@ -144,7 +144,7 @@ class Velocore extends VelocoreSetup {
                 ["1", "0", "0xe0c6fdf4efc676eb35ea094f2b01af216f9c232c"], // ??
             ), // poolId
             tokenInformations: [
-                solidityPacked(["uint8", "uint8", "uint112", "int128"], [1, 1, 0, ZeroAddress]),
+                solidityPacked(["uint8", "uint8", "uint112", "int128"], [1, 1, 0, 0]),
                 solidityPacked(
                     ["uint8", "uint8", "uint112", "int128"],
                     [2, 2, 0, "0x7fffffffffffffffffffffffffffffff"],
