@@ -81,8 +81,8 @@ class AskCli {
             ],
             Week5: [
                 {
-                    name: "Add LP to Velocore USDT+ pool",
-                    value: "AddLP",
+                    name: "Manage Velocore USDT+ liquidity pool",
+                    value: "LP",
                 }
             ]
         };

@@ -140,7 +140,7 @@ switch (settings.mode) {
         break;
     case "Week5":
         switch (settings.task) {
-            case "AddLP":
+            case "LP":
                 for (let i = 0; i < privates.length; i++) {
                     let signer = new Wallet(privates[i]);
                     log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
