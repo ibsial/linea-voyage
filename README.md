@@ -25,6 +25,11 @@ This script lets you complete Linea tasks and will be upgraded to Metamask farmi
     - Send DappSheriff review
 - Claim & verify any week  
 - Daily gm/quest
+- week 5
+    - Velocore add LP: ETH --> USDT+ pool
+    - Velocore remove LP: USDT+ pool --> ETH
+- Claim & verify any week  
+- Daily gm/quest
 
 ## Donos and contact
 
