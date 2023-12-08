@@ -60,3 +60,11 @@ export class IzumiSetup {
     toToken = "wstETH"
     amountFromTo = ["0.013", "0.014"] // numbers ["0.1", "0.2"] | percentage ["30%", "40%"]
 }
+// add LP to USDT+ pool on Velocore using "Magic" method
+export class VelocoreSetup {
+    /* You need ETH to run this script */
+    network = "Linea"
+    fromToken = "ETH"
+    mode = "deposit" // or "withdraw"
+    amountFromTo = ["100%", "100%"] // numbers ["0.1", "0.2"] | percentage ["30%", "40%"]
+}
