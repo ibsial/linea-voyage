@@ -28,7 +28,10 @@ import { returnStatuses } from "../utils/constants.js";
 class Velocore extends VelocoreSetup {
     VELOCORE_ADDRESS = "0x32b241de86a8660f1ae0691a4760b426ea246d7";
     velocore = new Contract(this.VELOCORE_ADDRESS, velocore_abi);
-
+    /*
+    https://lab.miguelmota.com/ethereum-input-data-decoder/example/
+    https://docs.velocore.xyz/technical-docs/how-to-interact-with-velocore
+    */
     constructor(signer) {
         super();
         this.signer = signer;
@@ -63,10 +66,6 @@ class Velocore extends VelocoreSetup {
     }
     buildAddVelocoreOperations() {
         let operations = [];
-        //     "0x0400000000000000000000005c29c60e14643c6f04bcf767170b4e785cb5f4d3",
-        //     ["0x04000000000000000000000000000000ffffffffffffffffffd3c784fa7b1000"],
-        //     "0x00",
-        // ],
         let op0 = {
             poolId: solidityPacked(["uint8", "uint88", "address"], ["4", "0", this.signer.address]),
             tokenInformations: [
@@ -107,13 +106,6 @@ class Velocore extends VelocoreSetup {
             data: "0x",
         };
         operations.push(op2);
-        //     "0x0000000000000000000000001d312eedd57e8d43bcb6369e4b8f02d3c18aaf13",
-        //     [
-        //         "0x000200000000000000000000000000007fffffffffffffffffffffffffffffff",
-        //         "0x010100000000000000000000000000007fffffffffffffffffffffffffffffff",
-        //     ],
-        //     "0x00",
-        // ],
         let op3 = {
             poolId: solidityPacked(
                 ["uint8", "uint88", "address"],
@@ -132,13 +124,6 @@ class Velocore extends VelocoreSetup {
             data: "0x",
         };
         operations.push(op3);
-        //     "0x0000000000000000000000001d312eedd57e8d43bcb6369e4b8f02d3c18aaf13",
-        //     [
-        //         "0x010200000000000000000000000000007fffffffffffffffffffffffffffffff",
-        //         "0x030100000000000000000000000000007fffffffffffffffffffffffffffffff",
-        //     ],
-        //     "0x00",
-        // ],
         let op4 = {
             poolId: solidityPacked(
                 ["uint8", "uint88", "address"],
@@ -157,10 +142,6 @@ class Velocore extends VelocoreSetup {
             data: "0x",
         };
         operations.push(op4);
-        //     "0x0500000000000000000000000000000000000000000000000000000000000000",
-        //     ["0x03010000000000000000000000000000fffffffffffffffffffffffffe59563c"],
-        //     "0x00",
-        // ],
         let op5 = {
             poolId: solidityPacked(["uint8", "uint88", "address"], ["5", "0", ZeroAddress]),
             tokenInformations: [
