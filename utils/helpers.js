@@ -155,7 +155,7 @@ export async function getGasPrice(networkName) {
             maxFeePerGas: ethers.parseUnits(
                 floatToFixed(resp.data[gasPricePreset].suggestedMaxFeePerGas),
                 "gwei",
-            ),
+            ) * 12n / 10n,
             maxPriorityFeePerGas: ethers.parseUnits(
                 floatToFixed(resp.data[gasPricePreset].suggestedMaxPriorityFeePerGas),
                 "gwei",
@@ -165,7 +165,7 @@ export async function getGasPrice(networkName) {
     } catch (e) {
         // log(e);
         let provider = new JsonRpcProvider(chains[networkName].rpc);
-        return { gasPrice: (await provider.getFeeData()).gasPrice };
+        return { gasPrice: (await provider.getFeeData()).gasPrice * 13n / 10n };
     }
 }
 export async function getNativeBalance(signer, networkName) {

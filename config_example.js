@@ -66,5 +66,5 @@ export class VelocoreSetup {
     network = "Linea"
     fromToken = "ETH"
     mode = "deposit" // or "withdraw"
-    amountFromTo = ["100%", "100%"] // numbers ["0.1", "0.2"] | percentage ["30%", "40%"]
+    amountFromTo = ["0.01", "0.02"] // numbers ["0.1", "0.2"] | percentage ["30%", "40%"]
 }

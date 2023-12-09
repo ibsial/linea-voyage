@@ -109,24 +109,24 @@ class Velocore extends VelocoreSetup {
             data: "0x00",
         };
         operations.push(op3);
-        let op4 = {
-            poolId: solidityPacked(
-                ["uint8", "uint88", "address"],
-                ["0", "0", "0x1d312eedd57e8d43bcb6369e4b8f02d3c18aaf13"], // ERC1155 (Wombat pool)
-            ),
-            tokenInformations: [
-                solidityPacked(
-                    ["uint8", "uint8", "uint112", "int128"],
-                    [1, 2, 0, "0x7fffffffffffffffffffffffffffffff"],
-                ),
-                solidityPacked(
-                    ["uint8", "uint8", "uint112", "int128"],
-                    [3, 1, 0, "0x7fffffffffffffffffffffffffffffff"],
-                ),
-            ],
-            data: "0x",
-        };
-        operations.push(op4);
+        // let op4 = {
+        //     poolId: solidityPacked(
+        //         ["uint8", "uint88", "address"],
+        //         ["0", "0", "0x1d312eedd57e8d43bcb6369e4b8f02d3c18aaf13"], // ERC1155 (Wombat pool)
+        //     ),
+        //     tokenInformations: [
+        //         solidityPacked(
+        //             ["uint8", "uint8", "uint112", "int128"],
+        //             [1, 2, 0, "0x7fffffffffffffffffffffffffffffff"],
+        //         ),
+        //         solidityPacked(
+        //             ["uint8", "uint8", "uint112", "int128"],
+        //             [3, 1, 0, "0x7fffffffffffffffffffffffffffffff"],
+        //         ),
+        //     ],
+        //     data: "0x",
+        // };
+        // operations.push(op4);
         let op5 = {
             poolId: solidityPacked(["uint8", "uint88", "address"], ["5", "0", ZeroAddress]),
             tokenInformations: [
@@ -233,7 +233,7 @@ class Velocore extends VelocoreSetup {
         let ethPrice = BigInt(this.ethPrice);
         let amountOut =
             (this.randomAmount * ethPrice * (100n - slippage)) / 100n / 1_000_000_000_000n; // 12 decimals
-        log(this.randomAmount, this.ethPrice, amountOut);
+        // log(this.randomAmount, this.ethPrice, amountOut);
         const int128Overflow = BigInt("0x100000000000000000000000000000000");
         return (int128Overflow - amountOut).toString(16);
     }
