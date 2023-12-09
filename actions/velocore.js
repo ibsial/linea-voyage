@@ -41,8 +41,8 @@ class Velocore extends VelocoreSetup {
         this.web3wrapper = new WEb3Wrapper(this.signer, this.network);
         this.velocore = this.velocore.connect(this.signer);
         this.tokenRef = [
-            zeroPadValue("0xb30e7a2e6f7389ca5ddc714da4c991b7a1dcc88e", 32), // USDC.e
-            // zeroPadValue("0x3F006B0493ff32B33be2809367F5F6722CB84a7b", 32), // wUSD+
+            // zeroPadValue("0x176211869ca2b568f2a7d4ee941e073a821ee1ff", 32), // USDC.e
+            zeroPadValue("0xb30e7a2e6f7389ca5ddc714da4c991b7a1dcc88e", 32), // wUSD+
             zeroPadValue("0xcc22F6AA610D1b2a0e89EF228079cB3e1831b1D1", 32), // LVC (Linea velocore)
             "0x0200000000000000000000021d312eedd57e8d43bcb6369e4b8f02d3c18aaf13", // ERC1155 (Wombat pool)
             "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", // native coin
@@ -56,7 +56,7 @@ class Velocore extends VelocoreSetup {
             tokenInformations: [
                 solidityPacked(
                     ["uint8", "uint8", "uint112", "int128"],
-                    [3, 0, 0, "0x" + this.getAmountInHex()],
+                    [4, 0, 0, "0x" + this.getAmountInHex()],
                 ),
             ],
             data: "0x00",
@@ -67,7 +67,7 @@ class Velocore extends VelocoreSetup {
             tokenInformations: [
                 solidityPacked(
                     ["uint8", "uint8", "uint88", "int152"],
-                    [3, 0, 0, "0x" + this.getAmountInHexSubtracted()],
+                    [4, 0, 0, "0x" + this.getAmountInHexSubtracted()],
                 ),
             ],
             data: "0x00",
@@ -76,7 +76,7 @@ class Velocore extends VelocoreSetup {
         let op2 = {
             poolId: solidityPacked(
                 ["uint8", "uint88", "address"],
-                ["0", "0", "0x2bd146e7d95cea62c89fcca8e529e06eec1b053c"], // USDC/ETH pool
+                ["0", "0", "0xe2c67a9b15e9e7ff8a9cb0dfb8fee5609923e5db"], // USDC/ETH pool
             ),
             tokenInformations: [
                 solidityPacked(
@@ -85,7 +85,7 @@ class Velocore extends VelocoreSetup {
                 ),
                 solidityPacked(
                     ["uint8", "uint8", "uint112", "int128"],
-                    [3, 2, 0, "0x7fffffffffffffffffffffffffffffff"],
+                    [4, 2, 0, "0x7fffffffffffffffffffffffffffffff"],
                 ),
             ],
             data: "0x00",
@@ -103,36 +103,36 @@ class Velocore extends VelocoreSetup {
                 ),
                 solidityPacked(
                     ["uint8", "uint8", "uint112", "int128"],
-                    [2, 1, 0, "0x7fffffffffffffffffffffffffffffff"],
+                    [1, 1, 0, "0x7fffffffffffffffffffffffffffffff"],
                 ),
             ],
             data: "0x00",
         };
         operations.push(op3);
-        // let op4 = {
-        //     poolId: solidityPacked(
-        //         ["uint8", "uint88", "address"],
-        //         ["0", "0", "0x1d312eedd57e8d43bcb6369e4b8f02d3c18aaf13"], // ERC1155 (Wombat pool)
-        //     ),
-        //     tokenInformations: [
-        //         solidityPacked(
-        //             ["uint8", "uint8", "uint112", "int128"],
-        //             [1, 2, 0, "0x7fffffffffffffffffffffffffffffff"],
-        //         ),
-        //         solidityPacked(
-        //             ["uint8", "uint8", "uint112", "int128"],
-        //             [3, 1, 0, "0x7fffffffffffffffffffffffffffffff"],
-        //         ),
-        //     ],
-        //     data: "0x",
-        // };
-        // operations.push(op4);
+        let op4 = {
+            poolId: solidityPacked(
+                ["uint8", "uint88", "address"],
+                ["0", "0", "0x1d312eedd57e8d43bcb6369e4b8f02d3c18aaf13"], // ERC1155 (Wombat pool)
+            ),
+            tokenInformations: [
+                solidityPacked(
+                    ["uint8", "uint8", "uint112", "int128"],
+                    [1, 2, 0, "0x7fffffffffffffffffffffffffffffff"],
+                ),
+                solidityPacked(
+                    ["uint8", "uint8", "uint112", "int128"],
+                    [3, 1, 0, "0x7fffffffffffffffffffffffffffffff"],
+                ),
+            ],
+            data: "0x00",
+        };
+        operations.push(op4);
         let op5 = {
             poolId: solidityPacked(["uint8", "uint88", "address"], ["5", "0", ZeroAddress]),
             tokenInformations: [
                 solidityPacked(
                     ["uint8", "uint8", "uint88", "int152"],
-                    [2, 1, 0, "0x" + this.getAmountOutUsdHexSubtracted()],
+                    [3, 1, 0, "0x" + this.getAmountOutUsdHexSubtracted()],
                 ),
             ],
             data: "0x00",
@@ -144,10 +144,10 @@ class Velocore extends VelocoreSetup {
                 ["1", "0", "0xe0c6fdf4efc676eb35ea094f2b01af216f9c232c"], // ??
             ), // poolId
             tokenInformations: [
-                solidityPacked(["uint8", "uint8", "uint112", "int128"], [1, 1, 0, 0]),
+                solidityPacked(["uint8", "uint8", "uint112", "int128"], [2, 1, 0, 0]),
                 solidityPacked(
                     ["uint8", "uint8", "uint112", "int128"],
-                    [2, 2, 0, "0x7fffffffffffffffffffffffffffffff"],
+                    [3, 2, 0, "0x7fffffffffffffffffffffffffffffff"],
                 ),
             ],
             data: "0x00",

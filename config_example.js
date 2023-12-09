@@ -2,7 +2,7 @@ export const maxRetries = 3
 export const sleepFromTo = [5 * 60, 10 * 60]
 export const gasPricePreset = "low" // "low" | "medium" | "high"
 export const goodGwei = "25"
-export const shuffleWallets = true // | false
+export const shuffleWallets = true // true | false
 
 export class MetamaskBridgeSetup {
     /* "Ethereum" | "Arbitrum" | "Optimism" | "Base" | "Linea" */
@@ -65,6 +65,6 @@ export class VelocoreSetup {
     /* You need ETH to run this script */
     network = "Linea"
     fromToken = "ETH"
-    mode = "deposit" // or "withdraw"
+    mode = "withdraw" // "deposit" | "withdraw"
     amountFromTo = ["0.01", "0.02"] // numbers ["0.1", "0.2"] | percentage ["30%", "40%"]
 }
