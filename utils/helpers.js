@@ -168,6 +168,15 @@ export async function getGasPrice(networkName, multiplier = 13n) {
         return { gasPrice: (await provider.getFeeData()).gasPrice * multiplier / 10n };
     }
 }
+export async function getCurrentGasPrice(networkName) {
+    try {
+        let provider = new JsonRpcProvider(chains[networkName].rpc);
+        return { gasPrice: (await provider.getFeeData()).gasPrice};
+    } catch (e) {
+        await defaultSleep(5);
+        return await getCurrentGasPrice(networkName);
+    }
+}
 export async function getNativeBalance(signer, networkName) {
     const provider = new JsonRpcProvider(chains[networkName].rpc);
     const nativeBalanceGetter = async () => {
@@ -198,8 +207,8 @@ export async function checkGwei(goodGwei) {
         (ts.getSeconds() < 10 ? "0" + ts.getSeconds() : ts.getSeconds());
     try {
         let treshold = parseUnits(goodGwei, "gwei");
-        let gweiData = await getGasPrice("Ethereum", 10n);
-        let totalFee = gweiData.gasPrice ? gweiData.gasPrice : gweiData.maxFeePerGas + gweiData.maxPriorityFeePerGas;
+        let gweiData = await getCurrentGasPrice("Ethereum");
+        let totalFee = gweiData.gasPrice ? gweiData.gasPrice : gweiData.maxFeePerGas;
         if (totalFee > treshold) {
             process.stdout.write(
                 `High gas price. Want: ${goodGwei} Have: ${formatUnits(
@@ -211,7 +220,7 @@ export async function checkGwei(goodGwei) {
         }
         while (true) {
             let treshold = parseUnits(goodGwei, "gwei");
-            let gweiData = await getGasPrice("Ethereum");
+            let gweiData = await getCurrentGasPrice("Ethereum");
             let totalFee = gweiData.maxFeePerGas + gweiData.maxPriorityFeePerGas;
             if (totalFee > treshold) {
                 process.stdout.clearLine(0); // clear current text
