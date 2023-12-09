@@ -293,7 +293,7 @@ class Velocore extends VelocoreSetup {
         } catch (e) {
             log(e);
             log(`error on setup occured: ${e.message}`);
-            return await this.swap(count);
+            return await this.addLp(count);
         }
         let gasPriceData = await getGasPrice(this.network);
         try {
@@ -334,7 +334,7 @@ class Velocore extends VelocoreSetup {
             );
             log(e.message);
             await defaultSleep(10);
-            return await this.swap(count);
+            return await this.addLp(count);
         }
     }
     async removeLp(count = 0) {
@@ -350,7 +350,7 @@ class Velocore extends VelocoreSetup {
         } catch (e) {
             log(e);
             log(`error on setup occured: ${e.message}`);
-            return await this.swap(count);
+            return await this.removeLp(count);
         }
         let gasPriceData = await getGasPrice(this.network);
         try {
@@ -377,7 +377,7 @@ class Velocore extends VelocoreSetup {
         } catch (e) {
             log(e);
             await defaultSleep(10);
-            return await this.swap(count);
+            return await this.removeLp(count);
         }
     }
     async getRandomAmount(tokenName = this.fromToken) {
