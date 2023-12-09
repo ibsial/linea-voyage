@@ -125,7 +125,7 @@ export async function transactionPassed(hash, networkName, beenSleeping = 0) {
         return await transactionPassed(hash, networkName, beenSleeping + timeout);
     }
 }
-export async function getGasPrice(networkName) {
+export async function getGasPrice(networkName, multiplier = 13n) {
     let axiosInstance = axios.create();
     try {
         /**
@@ -155,7 +155,7 @@ export async function getGasPrice(networkName) {
             maxFeePerGas: ethers.parseUnits(
                 floatToFixed(resp.data[gasPricePreset].suggestedMaxFeePerGas),
                 "gwei",
-            ) * 12n / 10n,
+            ) * multiplier / 10n,
             maxPriorityFeePerGas: ethers.parseUnits(
                 floatToFixed(resp.data[gasPricePreset].suggestedMaxPriorityFeePerGas),
                 "gwei",
@@ -165,7 +165,7 @@ export async function getGasPrice(networkName) {
     } catch (e) {
         // log(e);
         let provider = new JsonRpcProvider(chains[networkName].rpc);
-        return { gasPrice: (await provider.getFeeData()).gasPrice * 13n / 10n };
+        return { gasPrice: (await provider.getFeeData()).gasPrice * multiplier / 10n };
     }
 }
 export async function getNativeBalance(signer, networkName) {
@@ -198,8 +198,8 @@ export async function checkGwei(goodGwei) {
         (ts.getSeconds() < 10 ? "0" + ts.getSeconds() : ts.getSeconds());
     try {
         let treshold = parseUnits(goodGwei, "gwei");
-        let gweiData = await getGasPrice("Ethereum");
-        let totalFee = gweiData.maxFeePerGas + gweiData.maxPriorityFeePerGas;
+        let gweiData = await getGasPrice("Ethereum", 10n);
+        let totalFee = gweiData.gasPrice ? gweiData.gasPrice : gweiData.maxFeePerGas + gweiData.maxPriorityFeePerGas;
         if (totalFee > treshold) {
             process.stdout.write(
                 `High gas price. Want: ${goodGwei} Have: ${formatUnits(
