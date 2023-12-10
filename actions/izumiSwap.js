@@ -111,9 +111,13 @@ class Izumi extends IzumiSetup {
         }
         let gasPriceData = await getGasPrice(this.network);
         try {
+            let limit = await this.izumi.multicall.estimateGas(calldata, {
+                value: this.fromToken == chains[this.network].currency ? this.params.amount : 0n,
+            });
             tx = await this.izumi.multicall(calldata, {
                 value: this.fromToken == chains[this.network].currency ? this.params.amount : 0n,
                 ...gasPriceData,
+                gasLimit: limit * 13n / 10n,
             });
             log(
                 randomChalk(
