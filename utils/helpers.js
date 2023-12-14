@@ -190,9 +190,9 @@ export async function getNativeBalance(signer, networkName) {
     };
     return await nativeBalanceGetter();
 }
-export async function checkGwei(goodGwei) {
-    let ts = new Date();
-    ts =
+
+function formattingTime(ts) {
+    return (
         "Time: " +
         ts.getDate() +
         "_" +
@@ -204,11 +204,21 @@ export async function checkGwei(goodGwei) {
         ":" +
         (ts.getMinutes() < 10 ? "0" + ts.getMinutes() : ts.getMinutes()) +
         ":" +
-        (ts.getSeconds() < 10 ? "0" + ts.getSeconds() : ts.getSeconds());
+        (ts.getSeconds() < 10 ? "0" + ts.getSeconds() : ts.getSeconds())
+    );
+}
+
+export async function checkGwei(goodGwei) {
+    let treshold = parseUnits(goodGwei, "gwei");
+    let gweiData;
+    let totalFee;
+
+    let ts = new Date();
+    ts = formattingTime(ts);
+    
     try {
-        let treshold = parseUnits(goodGwei, "gwei");
-        let gweiData = await getCurrentGasPrice("Ethereum");
-        let totalFee = gweiData.gasPrice ? gweiData.gasPrice : gweiData.maxFeePerGas;
+        gweiData = await getCurrentGasPrice("Ethereum");
+        totalFee = gweiData.gasPrice ? gweiData.gasPrice : gweiData.maxFeePerGas;
         if (totalFee > treshold) {
             process.stdout.write(
                 `High gas price. Want: ${goodGwei} Have: ${formatUnits(
@@ -218,25 +228,24 @@ export async function checkGwei(goodGwei) {
             );
             await defaultSleep(20, false);
         }
-        while (true) {
-            let treshold = parseUnits(goodGwei, "gwei");
-            let gweiData = await getCurrentGasPrice("Ethereum");
-            let totalFee = gweiData.maxFeePerGas + gweiData.maxPriorityFeePerGas;
-            if (totalFee > treshold) {
-                process.stdout.clearLine(0); // clear current text
-                process.stdout.cursorTo(0);
-                process.stdout.write(
-                    `High gas price. Want: ${goodGwei} Have: ${formatUnits(
-                        totalFee,
-                        "gwei",
-                    )} sleeping.. ${ts}`,
-                );
-                await defaultSleep(20, false);
-            } else {
-                console.log("");
-                return true;
-            }
+        while (totalFee > treshold) {
+            ts = new Date();
+            ts = formattingTime(ts);
+            gweiData = await getCurrentGasPrice("Ethereum");
+            totalFee = gweiData.maxFeePerGas + gweiData.maxPriorityFeePerGas;
+
+           process.stdout.moveCursor(0, -1)
+            process.stdout.write(
+                `\rHigh gas price. Want: ${goodGwei} Have: ${formatUnits(
+                    totalFee,
+                    "gwei",
+                )} sleeping.. ${ts}`,
+            );
+            await defaultSleep(20, false);
         }
+        ts = new Date();
+        ts = formattingTime(ts);
+        console.log("Good gwei");
     } catch (e) {
         console.log("");
         return await checkGwei(goodGwei);
