@@ -34,12 +34,16 @@ class AskCli {
                         value: "Week6",
                     },
                     {
+                        name: `complete Week7 quests (Review)`,
+                        value: "Week7",
+                    },
+                    {
                         name: `do Intract verify/claim/daily tasks`,
                         value: "Intract",
                     },
                 ],
                 default: "Intract",
-                loop: true,
+                loop: false,
             },
         ];
         const answers = await inquirer.prompt(questions);
@@ -88,15 +92,17 @@ class AskCli {
                     name: "Manage Velocore USDT+ liquidity pool",
                     value: "LP",
                 },
-                {
-                    name: "Review dapp (Velocore)",
-                    value: "ReviewDapp",
-                },
             ],
             Week6: [
                 {
                     name: "0xScore attestation",
                     value: "0xScore",
+                },
+            ],
+            Week7: [
+                {
+                    name: "Review dapp (ZKEX)",
+                    value: "ReviewDapp",
                 },
             ]
         };
@@ -174,8 +180,12 @@ class AskCli {
                         name: `week 5`,
                         value: "5",
                     },
+                    {
+                        name: `week 7`,
+                        value: "7",
+                    },
                 ],
-                default: "5",
+                default: "7",
                 loop: true,
             },
         ];

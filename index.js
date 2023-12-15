@@ -173,6 +173,19 @@ switch (settings.mode) {
                 break;
         }
         break;
+    case "Week7":
+        switch (settings.task) {
+            case "ReviewDapp":
+                for (let i = 0; i < privates.length; i++) {
+                    await checkGwei(goodGwei);
+                    let signer = new Wallet(privates[i]);
+                    log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
+                    await doReview(signer, proxies[i % proxies.length]);
+                    await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
+                }
+                break;
+        }
+        break;
     case "Intract":
         let intSet = new IntractSetup();
         let interactSettings = {};
