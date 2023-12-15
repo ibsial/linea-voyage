@@ -30,6 +30,10 @@ class AskCli {
                         value: "Week5",
                     },
                     {
+                        name: `complete Week6 verification (0xScore)`,
+                        value: "Week6",
+                    },
+                    {
                         name: `do Intract verify/claim/daily tasks`,
                         value: "Intract",
                     },
@@ -87,6 +91,12 @@ class AskCli {
                 {
                     name: "Review dapp (Velocore)",
                     value: "ReviewDapp",
+                },
+            ],
+            Week6: [
+                {
+                    name: "0xScore attestation",
+                    value: "0xScore",
                 },
             ]
         };

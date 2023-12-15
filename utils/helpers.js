@@ -110,7 +110,7 @@ export async function transactionPassed(hash, networkName, beenSleeping = 0) {
         txReceipt = await provider.getTransactionReceipt(hash);
         if (txReceipt) {
             return {
-                code: txReceipt,
+                code: txReceipt.status,
                 data: "",
                 log: `tx receipt received with status: ${
                     txReceipt.status == 1 ? "success" : "fail"
@@ -143,19 +143,10 @@ export async function getGasPrice(networkName, multiplier = 13n) {
             return int + "." + floating;
         };
         let gasPrice = {
-            // gasPrice:
-            //     ethers.parseUnits(
-            //         floatToFixed(resp.data[gasPricePreset].suggestedMaxPriorityFeePerGas),
-            //         "gwei",
-            //     ) +
-            //     ethers.parseUnits(
-            //         floatToFixed(resp.data[gasPricePreset].suggestedMaxFeePerGas),
-            //         "gwei",
-            //     ),
             maxFeePerGas: ethers.parseUnits(
                 floatToFixed(resp.data[gasPricePreset].suggestedMaxFeePerGas),
                 "gwei",
-            ) * multiplier / 10n,
+            ),
             maxPriorityFeePerGas: ethers.parseUnits(
                 floatToFixed(resp.data[gasPricePreset].suggestedMaxPriorityFeePerGas),
                 "gwei",
@@ -209,6 +200,7 @@ export async function checkGwei(goodGwei) {
         let treshold = parseUnits(goodGwei, "gwei");
         let gweiData = await getCurrentGasPrice("Ethereum");
         let totalFee = gweiData.gasPrice ? gweiData.gasPrice : gweiData.maxFeePerGas;
+        if (!totalFee) throw "Can't fetch gwei";
         if (totalFee > treshold) {
             process.stdout.write(
                 `High gas price. Want: ${goodGwei} Have: ${formatUnits(
@@ -219,9 +211,9 @@ export async function checkGwei(goodGwei) {
             await defaultSleep(20, false);
         }
         while (true) {
-            let treshold = parseUnits(goodGwei, "gwei");
-            let gweiData = await getCurrentGasPrice("Ethereum");
-            let totalFee = gweiData.maxFeePerGas + gweiData.maxPriorityFeePerGas;
+            gweiData = await getCurrentGasPrice("Ethereum");
+            totalFee = gweiData.gasPrice ? gweiData.gasPrice : gweiData.maxFeePerGas;
+            if (!totalFee) throw "Can't fetch gwei";
             if (totalFee > treshold) {
                 process.stdout.clearLine(0); // clear current text
                 process.stdout.cursorTo(0);

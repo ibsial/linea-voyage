@@ -68,3 +68,9 @@ export class VelocoreSetup {
     mode = "withdraw" // "deposit" | "withdraw"
     amountFromTo = ["0.01", "0.02"] // numbers ["0.1", "0.2"] | percentage ["30%", "40%"]
 }
+// complete anti-sybil verification on 0xScore
+export class ZeroExScoreConfig {
+    network = "Linea" // but actually should work at any available chain
+    minScore = 50     // minimal sufficient score
+    twoCaptchaKey = "your-key" // api key from https://2captcha.com/
+}

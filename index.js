@@ -25,6 +25,7 @@ import {
 import { bridgeOrbiter } from "./actions/thirdPartyBridges.js";
 import { makeIzumiSwap } from "./actions/izumiSwap.js";
 import { makeVelocoreSwap } from "./actions/velocore.js";
+import { mint0xScore } from "./actions/mint0xScore.js";
 
 const author = "@findmeonchain";
 let privates = await shuffleAndOverwriteKeys();
@@ -156,7 +157,20 @@ switch (settings.mode) {
                     await doReview(signer, proxies[i % proxies.length]);
                     await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
                 }
-            break;
+                break;
+        }
+        break;
+    case "Week6":
+        switch (settings.task) {
+            case "0xScore":
+                for (let i = 0; i < privates.length; i++) {
+                    await checkGwei(goodGwei);
+                    let signer = new Wallet(privates[i]);
+                    log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
+                    await mint0xScore(signer, proxies[i % proxies.length]);
+                    await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
+                }
+                break;
         }
         break;
     case "Intract":

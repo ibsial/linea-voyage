@@ -29,7 +29,7 @@ class WEb3Wrapper {
             console.log("error on fetching native balance, will retry again");
             console.log(e.reason);
             await sleep(timeout);
-            return await this.getNativeBalace(this.signer);
+            return this.getNativeBalace(this.signer);
         }
     }
     /**
