@@ -38,6 +38,10 @@ class AskCli {
                         value: "Week7",
                     },
                     {
+                        name: `complete Week9 quests (Quiz)`,
+                        value: "Week9",
+                    },
+                    {
                         name: `do Intract verify/claim/daily tasks`,
                         value: "Intract",
                     },
@@ -103,6 +107,12 @@ class AskCli {
                 {
                     name: "Review dapp (ZKEX)",
                     value: "ReviewDapp",
+                },
+            ],
+            Week9: [
+                {
+                    name: "Complete quiz",
+                    value: "Quiz",
                 },
             ]
         };
