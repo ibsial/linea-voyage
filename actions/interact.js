@@ -3832,6 +3832,93 @@ async function verifyWeek9Quiz(signer, proxy = undefined) {
         await defaultSleep(3);
     }
 }
+async function verifyPOH(signer, proxy = undefined) {
+    let interact = new Interact(signer, proxy);
+    await interact.login();
+    const authInfo = interact.authInfo;
+    const payload = {
+        "campaignId": "65705a282a20cd7291eb8e4b",
+        "userInputs": {
+            "TRANSACTION_HASH": "0x"
+        },
+        "task": {
+            "userInputs": {
+                "initiateButton": {
+                    "label": "Bridge on MetaMask",
+                    "baseLink": "https://portfolio.metamask.io/bridge",
+                    "isExist": true
+                },
+                "verifyButton": {
+                    "label": "Verify",
+                    "callbackFunction": true,
+                    "callbackParameters": []
+                },
+                "dynamicInputs": []
+            },
+            "asyncVerifyConfig": {
+                "isAsyncVerify": true,
+                "verifyTimeInSeconds": 600,
+                "maxRetryCount": 1,
+                "retryTimeInSeconds": 600,
+                "isScatterEnabled": false,
+                "maxScatterInSeconds": 0
+            },
+            "powVerifyConfig": {
+                "isPOWVerify": false
+            },
+            "recurrenceConfig": {
+                "isRecurring": false,
+                "frequencyInDays": 1,
+                "maxRecurrenceCount": 1
+            },
+            "flashTaskConfig": {
+                "isFlashTask": false
+            },
+            "name": "Verax Verification",
+            "description": "Verax Verification",
+            "templateType": "VeraxVerification",
+            "xp": 0,
+            "adminInputs": [],
+            "isAttributionTask": true,
+            "templateFamily": "LINEA/WEEK4",
+            "totalUsersCompleted": 358274,
+            "totalRecurringUsersCompleted": [],
+            "requiredLogins": [
+                "EVMWallet"
+            ],
+            "isIntractTask": false,
+            "isRequiredTask": true,
+            "showOnChainHelper": false,
+            "hasMaxRetryCheck": false,
+            "hasRateLimitCheck": false,
+            "isAddedLater": false,
+            "isVisible": true,
+            "isDeleted": false,
+            "_id": "65705a282a20cd7291eb8e4c"
+        },
+        "verificationObject": {
+            "questerWalletAddress": signer.address
+        }
+    };
+    const preconditiontaskIds = [];
+        let verifyResp = await interact.verifyTask(
+            authInfo.token,
+            payload,
+            preconditiontaskIds,
+            `POH`,
+        );
+        if (verifyResp) {
+            log(c.green(verifyResp));
+        } else {
+            log(
+                randomChalk(
+                    `[POH] ${signer.address} started verification, come back in some time to claim points`,
+                ),
+            );
+        }
+        await defaultSleep(3);
+}
+
 export async function registerScenario(signer, proxy = undefined) {
     await setWallet(signer, proxy);
 }
@@ -3875,6 +3962,9 @@ export async function verifyTasksScenario(signer, week, proxy = undefined) {
         case "9":
             await verifyWeek9Quiz(signer, proxy);
             break;
+        case "POH":
+            await verifyPOH(signer, proxy);
+            break;
     }
 }
 export async function claimTasksScenario(signer, week, proxy = undefined) {
@@ -3908,3 +3998,100 @@ export async function claimTasksScenario(signer, week, proxy = undefined) {
             break;
     }
 }
+
+
+
+// verify twitter
+/*
+{
+    "campaignId": "654a0e8e95c012164b1f1683",
+    "userInputs": {
+        "TRANSACTION_HASH": "0x"
+    },
+    "task": {
+        "userInputs": {
+            "initiateButton": {
+                "label": "Join",
+                "baseLink": "https://discord.com/invite/faXj8Yzua6/",
+                "isExist": true
+            },
+            "verifyButton": {
+                "label": "Verify",
+                "callbackFunction": true,
+                "callbackParameters": [
+                    {
+                        "source": "ADMIN_INPUT_FIELD",
+                        "key": "DISCORD_INVITE_LINK"
+                    },
+                    {
+                        "source": "QUEST_USER_DB_FIELD",
+                        "key": "_id"
+                    },
+                    {
+                        "source": "TASK_VERIFICATION_OBJECT",
+                        "key": "guildId"
+                    }
+                ]
+            },
+            "dynamicInputs": [
+                ""
+            ]
+        },
+        "asyncVerifyConfig": {
+            "isScatterEnabled": false,
+            "maxScatterInSeconds": 0,
+            "isAsyncVerify": false,
+            "verifyTimeInSeconds": 0,
+            "maxRetryCount": 0,
+            "retryTimeInSeconds": 0
+        },
+        "powVerifyConfig": {
+            "isPOWVerify": false
+        },
+        "recurrenceConfig": {
+            "isRecurring": false,
+            "frequencyInDays": 0,
+            "maxRecurrenceCount": 0
+        },
+        "flashTaskConfig": {
+            "isFlashTask": false
+        },
+        "name": "Join a Discord Server",
+        "description": "Join a Discord Server",
+        "templateType": "DiscordJoin",
+        "xp": 10,
+        "adminInputs": [
+            {
+                "key": "DISCORD_INVITE_LINK",
+                "inputType": "INPUT_STRING",
+                "label": "Discord Server link",
+                "placeholder": "Server invite link for users",
+                "value": "https://discord.com/invite/faXj8Yzua6/",
+                "_id": "654a0e8e95c012164b1f1688"
+            }
+        ],
+        "verificationData": {
+            "guildId": "1107908524815700029"
+        },
+        "isAttributionTask": true,
+        "templateFamily": "DISCORD",
+        "totalUsersCompleted": 477642,
+        "totalRecurringUsersCompleted": [],
+        "requiredLogins": [
+            "DISCORD"
+        ],
+        "isIntractTask": true,
+        "isRequiredTask": true,
+        "showOnChainHelper": false,
+        "hasMaxRetryCheck": false,
+        "hasRateLimitCheck": false,
+        "isAddedLater": false,
+        "isVisible": true,
+        "isDeleted": false,
+        "_id": "654a0e8e95c012164b1f1687"
+    },
+    "verificationObject": {
+        "questerWalletAddress": signer.address
+    }
+}
+*/

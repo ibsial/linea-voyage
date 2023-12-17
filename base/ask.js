@@ -155,6 +155,10 @@ class AskCli {
                         name: "show account XP stats",
                         value: "stats"
                     },
+                    {
+                        name: "show POH status",
+                        value: "POH"
+                    },
                 ],
                 default: "daily",
                 loop: true,

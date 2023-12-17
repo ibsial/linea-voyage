@@ -247,6 +247,10 @@ switch (settings.mode) {
                     break;
                 case "stats":
                     await logStatsScenario(signer, proxies[i % proxies.length]);
+                    break;
+                case "POH":
+                    await verifyTasksScenario(signer, "POH", proxies[i % proxies.length]);
+                    break;
             }
             await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
         }
