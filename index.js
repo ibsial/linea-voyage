@@ -190,7 +190,6 @@ switch (settings.mode) {
         switch (settings.task) {
             case "Quiz":
                 for (let i = 0; i < privates.length; i++) {
-                    await checkGwei(goodGwei);
                     let signer = new Wallet(privates[i]);
                     log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
                     await verifyTasksScenario(signer, "9", proxies[i % proxies.length]);
