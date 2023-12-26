@@ -32,7 +32,7 @@ export const chains = {
     Optimism: {
         id: "7",
         lzId: "111",
-        zkbridgeId: "8",
+        zkbridgeId: "7",
         rpc: "https://optimism.llamarpc.com	",
         explorer: "https://optimistic.etherscan.io/tx/",
         currency: "ETH",
@@ -62,7 +62,7 @@ export const chains = {
     Linea: {
         id: "59144",
         lzId: "101",
-        zkbridgeId: "8",
+        zkbridgeId: "19",
         rpc: "https://1rpc.io/linea",
         explorer: "https://lineascan.build/tx/",
         currency: "ETH",
