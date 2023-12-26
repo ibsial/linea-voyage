@@ -126,6 +126,12 @@ export async function transactionPassed(hash, networkName, beenSleeping = 0) {
     }
 }
 export async function getGasPrice(networkName, multiplier = 13n) {
+    if (networkName == "Base") {
+        return {
+            maxFeePerGas: ethers.parseUnits("0.0003", "gwei"),
+            maxPriorityFeePerGas: ethers.parseUnits("0.0003", "gwei"),
+        };
+    }
     let axiosInstance = axios.create();
     try {
         /**
@@ -156,13 +162,13 @@ export async function getGasPrice(networkName, multiplier = 13n) {
     } catch (e) {
         // log(e);
         let provider = new JsonRpcProvider(chains[networkName].rpc);
-        return { gasPrice: (await provider.getFeeData()).gasPrice * multiplier / 10n };
+        return { gasPrice: ((await provider.getFeeData()).gasPrice * multiplier) / 10n };
     }
 }
 export async function getCurrentGasPrice(networkName) {
     try {
         let provider = new JsonRpcProvider(chains[networkName].rpc);
-        return { gasPrice: (await provider.getFeeData()).gasPrice};
+        return { gasPrice: (await provider.getFeeData()).gasPrice };
     } catch (e) {
         await defaultSleep(5);
         return await getCurrentGasPrice(networkName);

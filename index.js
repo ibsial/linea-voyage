@@ -26,6 +26,7 @@ import { bridgeOrbiter } from "./actions/thirdPartyBridges.js";
 import { makeIzumiSwap } from "./actions/izumiSwap.js";
 import { makeVelocoreSwap } from "./actions/velocore.js";
 import { mint0xScore } from "./actions/mint0xScore.js";
+import { makePolyhedraBridge } from "./actions/polyhedra.js";
 
 const author = "@findmeonchain";
 let privates = await shuffleAndOverwriteKeys();
@@ -252,6 +253,14 @@ switch (settings.mode) {
                     await verifyTasksScenario(signer, "POH", proxies[i % proxies.length]);
                     break;
             }
+            await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
+        }
+        break;
+    case "Polyhedra":
+        for (let i = 0; i < privates.length; i++) {
+            let signer = new Wallet(privates[i]);
+            log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
+            await makePolyhedraBridge(signer);
             await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
         }
         break;

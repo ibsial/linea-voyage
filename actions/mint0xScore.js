@@ -21,13 +21,13 @@ import { returnStatuses } from "../utils/constants.js";
 import { HttpsProxyAgent } from "https-proxy-agent";
 
 class ZeroExScore extends ZeroExScoreConfig {
-    urls = {
-        getNonce: "https://api.0xscore.pro/v2/authorization/nonce", // POST
-        signIn: "https://api.0xscore.pro/v2/authorization/sign",
-        checkAttestationStatus: "https://api.0xscore.pro/v3/nft/attest/status",
-        register: "https://api.0xscore.pro/v4/score/register",
-        getScore: "https://api.0xscore.pro/v4/score/get",
-        getMintData: "https://api.0xscore.pro/v3/nft/attest/create",
+    urls = { 
+        getNonce: "https://api.0xscore.io/v2/authorization/nonce", // POST
+        signIn: "https://api.0xscore.io/v2/authorization/sign",
+        checkAttestationStatus: "https://api.0xscore.io/v3/nft/attest/status",
+        register: "https://api.0xscore.io/v4/score/register",
+        getScore: "https://api.0xscore.io/v4/score/get",
+        getMintData: "https://api.0xscore.io/v3/nft/attest/create",
     };
     constructor(signer, proxy = undefined) {
         super();
@@ -51,8 +51,8 @@ class ZeroExScore extends ZeroExScoreConfig {
                 { wallet_address: this.signer.address.toLowerCase() },
                 {
                     headers: {
-                        Origin: `https://0xscore.pro`,
-                        Referer: `https://0xscore.pro/`,
+                        Origin: `https://0xscore.io`,
+                        Referer: `https://0xscore.io/`,
                         "User-Agent": `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36`,
                     },
                 },
@@ -82,8 +82,8 @@ class ZeroExScore extends ZeroExScoreConfig {
                 },
                 {
                     headers: {
-                        Origin: `https://0xscore.pro`,
-                        Referer: `https://0xscore.pro/`,
+                        Origin: `https://0xscore.io`,
+                        Referer: `https://0xscore.io/`,
                         "User-Agent": `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36`,
                     },
                 },
@@ -135,7 +135,7 @@ class ZeroExScore extends ZeroExScoreConfig {
                     clientKey: this.twoCaptchaKey,
                     task: {
                         type: "RecaptchaV2TaskProxyless",
-                        websiteURL: "https://0xscore.pro/linea-attestation",
+                        websiteURL: "https://0xscore.io/linea-attestation",
                         websiteKey: "6Lf9Dx4pAAAAALCWASgOXeHdYPpyvp1ZbF-zMcm1",
                         isInvisible: true,
                     },

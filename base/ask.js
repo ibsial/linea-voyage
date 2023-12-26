@@ -42,6 +42,10 @@ class AskCli {
                         value: "Week9",
                     },
                     {
+                        name: `do polyhedra bridge`,
+                        value: "Polyhedra",
+                    },
+                    {
                         name: `do Intract verify/claim/daily tasks`,
                         value: "Intract",
                     },
@@ -263,7 +267,7 @@ class AskCli {
 let ask = new AskCli();
 let settings = {};
 settings.mode = await ask.askMode();
-if (settings.mode != "Intract") {
+if (settings.mode != "Intract" && settings.mode != "Polyhedra") {
     settings.task = await ask.askWeekTask(settings.mode)
 }
 

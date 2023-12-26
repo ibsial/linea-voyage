@@ -272,4 +272,25 @@ export const swapData = {
             decimals: 18,
         },
     },
+    Mantle: {
+        MNT: {
+            name: "MNT",
+            address: "0x0000000000000000000000000000000000000000",
+            decimals: 18,
+        }
+    },
+    Scroll: {
+        ETH: {
+            name: "ETH",
+            address: "0x0000000000000000000000000000000000000000",
+            decimals: 18,
+        }
+    },
+    OpBnb: {
+        BNB: {
+            name: "BNB",
+            address: "0x0000000000000000000000000000000000000000",
+            decimals: 18,
+        }
+    },
 };

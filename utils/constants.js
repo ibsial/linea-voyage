@@ -27,6 +27,19 @@ export const metamaskAddresses = {
     Avalanche: "0x1a1ec25DC08e98e5E93F1104B5e5cdD298707d31" // not sure if true
 
 }
+export const polyhedraAddresses = {
+    Ethereum:  "0x89a56FF41a4be1360f780c5abFBA8FD7EceD2c7A",
+    Arbitrum:  "0xC9D0b733AdAa1f851639cA47a9a2d8A6C8572BdB",
+    Optimism:  "0x24bbC063DeF30Ae81AECC659B97A8b2562b2AFCd",
+    Base:      "0x87A659d0433F21E257f5d252fe163E1341DdCe81", 
+    Linea:     "0x366C1B89aA0783d0886B9EF817d10c8729783dCb",
+    Bsc:       "0x51187757342914E7d94FFFD95cCCa4f440FE0E06",
+    Polygon:   "0x104bc711530554F18936a12542192F8bd36166B1",
+    Mantle:    "0xAFC153cF66F33C492d5b638Ee90f5eBd2673e4d3",
+    Scroll:    "0xe69F676b2142FA05A3DC51A0E51d68a685AE7391",
+    OpBnb:     "0x953a578c7Ce8F3A1BF625d182A8caf7181FD4BEB",
+}
+
 export const chalkColors = [
     "green",
     "greenBright",

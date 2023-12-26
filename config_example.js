@@ -74,3 +74,12 @@ export class ZeroExScoreConfig {
     minScore = 50     // minimal sufficient score
     twoCaptchaKey = "your-key" // api key from https://2captcha.com/
 }
+
+export class PolyhedraSetup {
+    /* "Ethereum" | "Arbitrum" | "Optimism" | "Base" | "Linea" | "Scroll" */
+    fromNetwork = "Linea"
+    /* "Ethereum" | "Arbitrum" | "Optimism" | "Base" | "Linea" | "Bsc" | "Polygon" | "Mantle" | "Scroll" | "OpBnb" */
+    toNetwork = "Mantle"
+
+    amountFromTo = ["0.0000001", "0.000002"] // numbers ["0.1", "0.2"] | percentage ["30%", "40%"]
+}
