@@ -94,13 +94,13 @@ class Polyhedra extends PolyhedraSetup {
             );
             log(
                 randomChalk(
-                    `Minting 0xScore with ${c.underline(this.score)} points for ${
-                        this.signer.address
-                    }`,
+                    `bridging ${NumbersHelpers.bigIntToPrettyFloatStr(this.randomAmount)} ${
+                        chains[this.fromNetwork].currency
+                    } via zkBridge from ${this.fromNetwork} to ${this.toNetwork}`,
                 ),
             );
-            log(c.green(chains[this.network].explorer + tx.hash));
-            return transactionPassed(tx.hash, this.network);
+            log(c.green(chains[this.fromNetwork].explorer + tx.hash));
+            return transactionPassed(tx.hash, this.fromNetwork);
         } catch (e) {
             log(c.red(`could not bridge. Reason: ${e.message}`));
             await defaultSleep(5);
