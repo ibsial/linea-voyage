@@ -5,6 +5,7 @@ import {
     RandomHelpers,
     c,
     checkGwei,
+    defaultSleep,
     delayedPrint,
     getNativeBalance,
     log,
@@ -27,6 +28,7 @@ import { makeIzumiSwap } from "./actions/izumiSwap.js";
 import { makeVelocoreSwap } from "./actions/velocore.js";
 import { mint0xScore } from "./actions/mint0xScore.js";
 import { makePolyhedraBridge } from "./actions/polyhedra.js";
+import { checkAndMint } from "./actions/foxyMint.js";
 
 const author = "@findmeonchain";
 let privates = await shuffleAndOverwriteKeys();
@@ -264,5 +266,14 @@ switch (settings.mode) {
             await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
         }
         break;
+    case "Foxy":
+        for (let i = 0; i < privates.length; i++) {
+            let signer = new Wallet(privates[i]);
+            log(c.cyan(`#${i + 1}/${privates.length} ${signer.address}`));
+            await checkAndMint(signer);
+            await defaultSleep(RandomHelpers.getRandomIntFromTo(10, 15));
+            await verifyTasksScenario(signer, "Foxy", proxies[i % proxies.length]);
+            await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
+        }
 }
 await delayedPrint(randomChalk(`Our road diverges, so ${c.bold("@findmeonchain")} says goodbye!`));

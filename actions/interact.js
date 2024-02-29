@@ -130,6 +130,47 @@ class Interact extends IntractSetup {
             return await this.login();
         }
     }
+    async loginFoxy() {
+        try {
+            let resp = await this.axiosInstance.post(this.baseUrl + "/auth/generate-nonce", {
+                walletAddress: this.signer.address,
+            });
+            let signedMsg = await this.signer.signMessage(
+                "Nonce: " + resp.data.data.nonce,
+            );
+            let walletResp = await this.axiosInstance.post(this.baseUrl + "/auth/wallet", {
+                signature: signedMsg,
+                userAddress: this.signer.address,
+                namespaceTag: "EVM",
+                projectId: "65db330580bf2481ddfae0c9",
+                isTaskLogin: false,
+                width: "590px",
+                reAuth: false,
+                connector: "metamask",
+                referralCode: null,
+                referralLink: null,
+                referralSource: null,
+            });
+
+            let expDate = new Date();
+            expDate.setDate(expDate.getDate() + 6);
+            const userId = walletResp.data._id;
+            const authToken = walletResp.headers["authorization"];
+
+            let authInfo = {
+                address: this.signer.address,
+                userId: userId,
+                token: authToken,
+                expires: expDate.toISOString(),
+            };
+            this.authInfo = authInfo;
+            return authInfo;
+        } catch (e) {
+            log(e);
+            await defaultSleep(10);
+            return await this.login();
+        }
+    }
     async setWallet(authInfo, lineaCampaingUserId) {
         try {
             let resp = await this.axiosInstance.post(
@@ -247,7 +288,7 @@ class Interact extends IntractSetup {
             },
         });
     }
-    async verifyTask(token, payload, preconditiontaskIds, taskName = "") {
+    async verifyTask(token, payload, preconditiontaskIds, taskName = "", questId = "") {
         try {
             let campaignInfo = await this.getCampaignInfo(token, payload.campaignId);
 
@@ -273,7 +314,7 @@ class Interact extends IntractSetup {
                 {
                     headers: {
                         authorization: `Bearer ${token}`,
-                        Questuserid: getLineaCampaingUserResponse._id,
+                        Questuserid: questId == "" ? getLineaCampaingUserResponse._id : getLineaCampaingUserResponse[questId]._id,
                     },
                 },
             );
@@ -286,7 +327,6 @@ class Interact extends IntractSetup {
             return e?.response?.data?.message;
         }
     }
-
     async claimTask(token, campaignId, taskId, taskName = "") {
         try {
             let campaignInfo = await this.getCampaignInfo(token, campaignId);
@@ -3918,7 +3958,135 @@ async function verifyPOH(signer, proxy = undefined) {
         }
         await defaultSleep(3);
 }
-
+async function verifyFoxy(signer, proxy = undefined) {
+    let interact = new Interact(signer, proxy);
+    await interact.loginFoxy()
+    const authInfo = interact.authInfo;
+    const payload = {
+        "campaignId": "65dc6c3180bf2481ddfc5725",
+        "userInputs": {},
+        "task": {
+            "userInputs": {
+                "initiateButton": {
+                    "label": "Mint your NFT",
+                    "baseLink": "https://beta.clutchplay.ai",
+                    "isExist": true
+                },
+                "verifyButton": {
+                    "label": "Verify",
+                    "callbackFunction": true,
+                    "callbackParameters": [
+                        {
+                            "source": "ADMIN_INPUT_FIELD",
+                            "key": "NFT_ADDRESS"
+                        },
+                        {
+                            "source": "ADMIN_INPUT_FIELD",
+                            "key": "NFT_BALANCE"
+                        },
+                        {
+                            "source": "CLIENT_VERIFICATION_OBJECT",
+                            "key": "questerWalletAddress"
+                        },
+                        {
+                            "source": "ADMIN_INPUT_FIELD",
+                            "key": "NFT_CHAIN_ID"
+                        }
+                    ]
+                },
+                "dynamicInputs": []
+            },
+            "asyncVerifyConfig": {
+                "isAsyncVerify": false,
+                "verifyTimeInSeconds": 0,
+                "maxRetryCount": 0,
+                "retryTimeInSeconds": 0,
+                "isScatterEnabled": false,
+                "maxScatterInSeconds": 0
+            },
+            "powVerifyConfig": {
+                "isPOWVerify": false
+            },
+            "recurrenceConfig": {
+                "isRecurring": false,
+                "frequencyInDays": 0,
+                "maxRecurrenceCount": 0
+            },
+            "flashTaskConfig": {
+                "isFlashTask": false
+            },
+            "name": "Holds a specific NFT",
+            "description": "Verify you hold NFT from Foxy collection on Linea",
+            "templateType": "WalletNftBalance",
+            "xp": 100,
+            "adminInputs": [
+                {
+                    "key": "NFT_ADDRESS",
+                    "inputType": "INPUT_STRING",
+                    "label": "NFT Contract Address",
+                    "placeholder": "",
+                    "value": "0x9dd4a2a1db6bc1168de7d758208abb109d9a386a",
+                    "_id": "65dc6ea380bf2481ddfc6099"
+                },
+                {
+                    "key": "NFT_BALANCE",
+                    "inputType": "INPUT_NUMBER",
+                    "label": "Minimum NFT count needed",
+                    "placeholder": "",
+                    "value": "1",
+                    "_id": "65dc6ea380bf2481ddfc609a"
+                },
+                {
+                    "key": "NFT_CHAIN_ID",
+                    "inputType": "SELECT",
+                    "label": "Specify chain",
+                    "placeholder": "ETHEREUM",
+                    "value": 59144,
+                    "optionsFrom": "https://api.intract.io/api/v1/chains/with-rpc-options",
+                    "_id": "65dc6ea380bf2481ddfc609b"
+                }
+            ],
+            "isAttributionTask": true,
+            "templateFamily": "WALLET",
+            "totalUsersCompleted": 98789,
+            "totalRecurringUsersCompleted": [],
+            "requiredLogins": [
+                "EVMWallet"
+            ],
+            "isIntractTask": false,
+            "isRequiredTask": true,
+            "showOnChainHelper": false,
+            "hasMaxRetryCheck": false,
+            "hasRateLimitCheck": false,
+            "isAddedLater": false,
+            "isVisible": true,
+            "isDeleted": false,
+            "reAttemptWaitTimeInSeconds": 0,
+            "_id": "65dc6ea273c627557a1f818d"
+        },
+        "verificationObject": {
+            "questerWalletAddress": signer.address
+        }
+    }
+    const preconditiontaskIds = [];
+        let verifyResp = await interact.verifyTask(
+            authInfo.token,
+            payload,
+            preconditiontaskIds,
+            `Foxy nft`,
+            "654a0e8e95c012164b1f1683"
+        );
+        if (verifyResp) {
+            log(c.green(verifyResp));
+        } else {
+            log(
+                randomChalk(
+                    `[Foxy nft] ${signer.address} started verification`,
+                ),
+            );
+        }
+        await defaultSleep(3);
+}
 export async function registerScenario(signer, proxy = undefined) {
     await setWallet(signer, proxy);
 }
@@ -3965,6 +4133,9 @@ export async function verifyTasksScenario(signer, week, proxy = undefined) {
         case "POH":
             await verifyPOH(signer, proxy);
             break;
+        case "Foxy":
+            await verifyFoxy(signer, proxy);
+            break;
     }
 }
 export async function claimTasksScenario(signer, week, proxy = undefined) {
@@ -3998,100 +4169,3 @@ export async function claimTasksScenario(signer, week, proxy = undefined) {
             break;
     }
 }
-
-
-
-// verify twitter
-/*
-{
-    "campaignId": "654a0e8e95c012164b1f1683",
-    "userInputs": {
-        "TRANSACTION_HASH": "0x"
-    },
-    "task": {
-        "userInputs": {
-            "initiateButton": {
-                "label": "Join",
-                "baseLink": "https://discord.com/invite/faXj8Yzua6/",
-                "isExist": true
-            },
-            "verifyButton": {
-                "label": "Verify",
-                "callbackFunction": true,
-                "callbackParameters": [
-                    {
-                        "source": "ADMIN_INPUT_FIELD",
-                        "key": "DISCORD_INVITE_LINK"
-                    },
-                    {
-                        "source": "QUEST_USER_DB_FIELD",
-                        "key": "_id"
-                    },
-                    {
-                        "source": "TASK_VERIFICATION_OBJECT",
-                        "key": "guildId"
-                    }
-                ]
-            },
-            "dynamicInputs": [
-                ""
-            ]
-        },
-        "asyncVerifyConfig": {
-            "isScatterEnabled": false,
-            "maxScatterInSeconds": 0,
-            "isAsyncVerify": false,
-            "verifyTimeInSeconds": 0,
-            "maxRetryCount": 0,
-            "retryTimeInSeconds": 0
-        },
-        "powVerifyConfig": {
-            "isPOWVerify": false
-        },
-        "recurrenceConfig": {
-            "isRecurring": false,
-            "frequencyInDays": 0,
-            "maxRecurrenceCount": 0
-        },
-        "flashTaskConfig": {
-            "isFlashTask": false
-        },
-        "name": "Join a Discord Server",
-        "description": "Join a Discord Server",
-        "templateType": "DiscordJoin",
-        "xp": 10,
-        "adminInputs": [
-            {
-                "key": "DISCORD_INVITE_LINK",
-                "inputType": "INPUT_STRING",
-                "label": "Discord Server link",
-                "placeholder": "Server invite link for users",
-                "value": "https://discord.com/invite/faXj8Yzua6/",
-                "_id": "654a0e8e95c012164b1f1688"
-            }
-        ],
-        "verificationData": {
-            "guildId": "1107908524815700029"
-        },
-        "isAttributionTask": true,
-        "templateFamily": "DISCORD",
-        "totalUsersCompleted": 477642,
-        "totalRecurringUsersCompleted": [],
-        "requiredLogins": [
-            "DISCORD"
-        ],
-        "isIntractTask": true,
-        "isRequiredTask": true,
-        "showOnChainHelper": false,
-        "hasMaxRetryCheck": false,
-        "hasRateLimitCheck": false,
-        "isAddedLater": false,
-        "isVisible": true,
-        "isDeleted": false,
-        "_id": "654a0e8e95c012164b1f1687"
-    },
-    "verificationObject": {
-        "questerWalletAddress": signer.address
-    }
-}
-*/

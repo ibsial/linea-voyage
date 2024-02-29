@@ -46,11 +46,15 @@ class AskCli {
                         value: "Polyhedra",
                     },
                     {
+                        name: `mint foxy nft`,
+                        value: "Foxy",
+                    },
+                    {
                         name: `do Intract verify/claim/daily tasks`,
                         value: "Intract",
                     },
                 ],
-                default: "Intract",
+                default: "Foxy",
                 loop: false,
             },
         ];
@@ -118,7 +122,7 @@ class AskCli {
                     name: "Complete quiz",
                     value: "Quiz",
                 },
-            ]
+            ],
         };
         const questions = [
             {
@@ -157,11 +161,11 @@ class AskCli {
                     },
                     {
                         name: "show account XP stats",
-                        value: "stats"
+                        value: "stats",
                     },
                     {
                         name: "show POH status",
-                        value: "POH"
+                        value: "POH",
                     },
                 ],
                 default: "daily",
@@ -267,8 +271,8 @@ class AskCli {
 let ask = new AskCli();
 let settings = {};
 settings.mode = await ask.askMode();
-if (settings.mode != "Intract" && settings.mode != "Polyhedra") {
-    settings.task = await ask.askWeekTask(settings.mode)
+if (settings.mode != "Intract" && settings.mode != "Polyhedra" && settings.mode != "Foxy") {
+    settings.task = await ask.askWeekTask(settings.mode);
 }
 
 export { AskCli, settings };
