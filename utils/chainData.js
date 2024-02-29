@@ -63,7 +63,7 @@ export const chains = {
         id: "59144",
         lzId: "101",
         zkbridgeId: "19",
-        rpc: "https://1rpc.io/linea",
+        rpc: "https://rpc.linea.build",
         explorer: "https://lineascan.build/tx/",
         currency: "ETH",
         tokens: {

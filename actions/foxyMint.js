@@ -17,11 +17,11 @@ function getUrl() {
         { cid: "QmUEiYGcZJWZWp9LNCTL5PGhGcjGvokKfcaCoj23dbp79J", supply: 10000, ending: "" }, // SHIBOSHIS
         { cid: "QmXUUXRSAJeb4u8p4yKHmXN1iAKtAV7jwLHjw35TNm5jN7", supply: 10000, ending: "" }, // Sappy Seals
         { cid: "QmTDcCdt3yb6mZitzWBmQr65AW6Wska295Dg9nbEYpSUDR", supply: 9500, ending: "" }, // BoredApeKennelClub
-        { cid: "QmeheS1gXQpdduhQsaba8Z1Q1bxz5xeSEzKdtEthdkRUw6", supply: 15000, ending: "json" }, // Akutars
+        { cid: "QmeheS1gXQpdduhQsaba8Z1Q1bxz5xeSEzKdtEthdkRUw6", supply: 15000, ending: ".json" }, // Akutars
     ];
     let collection = urls[Math.floor(Math.random() * urls.length)];
     let id = Math.floor(Math.random() * collection.supply);
-    return `https://ipfs.clutchplay.ai/ipfs/${collection.cid}/${id}.${collection.ending}`;
+    return `https://ipfs.clutchplay.ai/ipfs/${collection.cid}/${id}${collection.ending}`;
 }
 async function check(signer, retryCount = 0) {
     if (retryCount >= maxRetries) {

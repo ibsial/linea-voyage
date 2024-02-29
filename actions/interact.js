@@ -215,14 +215,16 @@ class Interact extends IntractSetup {
         return getSuperUserResponse.data;
     }
 
-    async getLineaCampaignUserInfo(token) {
+    async getLineaCampaignUserInfo(token, projectId = "65db330580bf2481ddfae0c9") {
         let getLineaCampaingUserResponse;
         try {
             getLineaCampaingUserResponse = await this.axiosInstance.get(
-                this.baseUrl + "/auth/get-user?projectId=6549ed0333cc8772783b858b",
+                this.baseUrl + `/auth/get-user?projectId=${projectId}`,
                 {
                     headers: {
                         authorization: `Bearer ${token}`,
+                        Origin: "https://www.intract.io",
+                        Referer: "https://www.intract.io/"
                     },
                 },
             );
@@ -261,7 +263,7 @@ class Interact extends IntractSetup {
         let getCampaignInfoResponse;
         try {
             let getLineaCampaingUserResponse = await this.getLineaCampaignUserInfo(token);
-
+            await defaultSleep(15)
             getCampaignInfoResponse = await this.axiosInstance.get(
                 this.baseUrl + "/journey/fetch",
                 {
@@ -288,10 +290,9 @@ class Interact extends IntractSetup {
             },
         });
     }
-    async verifyTask(token, payload, preconditiontaskIds, taskName = "", questId = "") {
+    async verifyTask(token, payload, preconditiontaskIds, taskName = "") {
         try {
             let campaignInfo = await this.getCampaignInfo(token, payload.campaignId);
-
             let isPreconditionsCompleted = true;
             for (const taskId of preconditiontaskIds) {
                 const completedTask = campaignInfo.events.find((e) => e.taskId === taskId);
@@ -314,7 +315,7 @@ class Interact extends IntractSetup {
                 {
                     headers: {
                         authorization: `Bearer ${token}`,
-                        Questuserid: questId == "" ? getLineaCampaingUserResponse._id : getLineaCampaingUserResponse[questId]._id,
+                        Questuserid: getLineaCampaingUserResponse._id,
                     },
                 },
             );
