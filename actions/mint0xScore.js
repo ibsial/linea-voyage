@@ -21,13 +21,13 @@ import { returnStatuses } from "../utils/constants.js";
 import { HttpsProxyAgent } from "https-proxy-agent";
 
 class ZeroExScore extends ZeroExScoreConfig {
-    urls = { 
+    urls = {
         getNonce: "https://api.0xscore.io/v2/authorization/nonce", // POST
         signIn: "https://api.0xscore.io/v2/authorization/sign",
-        checkAttestationStatus: "https://api.0xscore.io/v3/nft/attest/status",
-        register: "https://api.0xscore.io/v4/score/register",
-        getScore: "https://api.0xscore.io/v4/score/get",
-        getMintData: "https://api.0xscore.io/v3/nft/attest/create",
+        checkAttestationStatus: "https://api.0xscore.io/v2/nft/attest/status",
+        register: "https://api.0xscore.io/v2/score/register",
+        getScore: "https://api.0xscore.io/v2/score/get",
+        getMintData: "https://api.0xscore.io/v2/nft/attest/create",
     };
     constructor(signer, proxy = undefined) {
         super();
@@ -99,32 +99,32 @@ class ZeroExScore extends ZeroExScoreConfig {
     }
     async checkMinted() {
         try {
-        const resp = await this.axiosInstance.post(
-            this.urls.checkAttestationStatus,
-            {},
-            {
-                headers: {
-                    Authorization: this.jwt,
+            const resp = await this.axiosInstance.post(
+                this.urls.checkAttestationStatus,
+                {},
+                {
+                    headers: {
+                        Authorization: this.jwt,
+                    },
                 },
-            },
-        );
-        if (resp.data.attestation_exist) {
-            log(
-                c.green(
-                    `${c.bold(
-                        resp.data.walletAddress,
-                    )} 0xScore already minted with score: ${c.underline(resp.data.score)}`,
-                ),
             );
-            return resp.data.score;
+            if (resp.data.attestation_exist) {
+                log(
+                    c.green(
+                        `${c.bold(
+                            resp.data.walletAddress,
+                        )} 0xScore already minted with score: ${c.underline(resp.data.score)}`,
+                    ),
+                );
+                return resp.data.score;
+            }
+            return undefined;
+        } catch (e) {
+            log(e);
+            log(c.red(`error on checking if 0xScore already minted`));
+            await defaultSleep(5);
+            return this.checkMinted();
         }
-        return undefined;
-    } catch (e) {
-        log(e?.message);
-        log(c.red(`error on checking if 0xScore already minted`))
-        await defaultSleep(5);
-        return this.checkMinted();
-    }
     }
     async solveCaptcha() {
         try {
@@ -180,6 +180,7 @@ class ZeroExScore extends ZeroExScoreConfig {
             const resp = await this.axiosInstance.post(
                 this.urls.register,
                 {
+                    blockchain: 1,
                     captcha_response: await this.solveCaptcha(),
                 },
                 {
@@ -221,7 +222,7 @@ class ZeroExScore extends ZeroExScoreConfig {
         try {
             const resp = await this.axiosInstance.post(
                 this.urls.getScore,
-                {},
+                { blockchain: 1 },
                 {
                     headers: {
                         Authorization: this.jwt,
@@ -282,17 +283,19 @@ class ZeroExScore extends ZeroExScoreConfig {
                 uint32 score,
                 bytes memory signature
             ) public payable`,
+            `function issuePrice() external returns(uint256)`
         ];
         const zeroExScore = new Contract(this.contract, zeroExScore_abi, this.signer);
+        const price = await zeroExScore.issuePrice()
         try {
             let limit = await zeroExScore.attest0xScoreSimple.estimateGas(...this.mintData, {
-                value: 700000000000000n,
+                value: price,
             });
             log(limit);
             let gasPrice = await getGasPrice("Linea");
             let tx = await zeroExScore.attest0xScoreSimple(...this.mintData, {
-                value: 700000000000000n,
-                gasLimit: (limit * 15n) / 10n,
+                value: price,
+                gasLimit: (limit * 12n) / 10n,
                 ...gasPrice,
             });
             log(
