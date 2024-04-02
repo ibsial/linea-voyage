@@ -2,7 +2,7 @@
   "type": "module",
   "author": "github: ibsial | telegram: @findmeonchain",
   "scripts": {
-    "linea": "node  --no-warnings ./index.js",
+    "linea": "node ./index.js",
     "metamask": ""
   },
   "dependencies": {

@@ -152,6 +152,7 @@ class ZeroExScore extends ZeroExScoreConfig {
                 },
             );
             while (solutionResp.data.status != "ready") {
+                log(`waiting captcha solution...`)
                 await defaultSleep(10);
                 if (solutionResp.data.errorId != 0) {
                     await defaultSleep(5);
@@ -232,7 +233,7 @@ class ZeroExScore extends ZeroExScoreConfig {
             this.score = resp.data.score;
             // log(resp.data);
             if (resp.data?.score === undefined) {
-                log("empty");
+                log("empty score, waiting..");
                 await defaultSleep(10);
                 return this.getScore();
             }
@@ -257,7 +258,7 @@ class ZeroExScore extends ZeroExScoreConfig {
                     },
                 },
             );
-            log(resp.data);
+            // log(resp.data);
             const mintData = [
                 resp.data.expiration_time,
                 resp.data.wallet_address,
@@ -283,15 +284,16 @@ class ZeroExScore extends ZeroExScoreConfig {
                 uint32 score,
                 bytes memory signature
             ) public payable`,
-            `function issuePrice() external returns(uint256)`
+            `function issuePrice() external view returns(uint256)`
         ];
         const zeroExScore = new Contract(this.contract, zeroExScore_abi, this.signer);
         const price = await zeroExScore.issuePrice()
+        // console.log(price)
         try {
             let limit = await zeroExScore.attest0xScoreSimple.estimateGas(...this.mintData, {
                 value: price,
             });
-            log(limit);
+            // log(limit);
             let gasPrice = await getGasPrice("Linea");
             let tx = await zeroExScore.attest0xScoreSimple(...this.mintData, {
                 value: price,
