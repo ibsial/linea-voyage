@@ -52,10 +52,10 @@ class Myx {
                 ethAmount, // sizeAmount
                 300000n, // maxSlippage
                 0, // paymentType
-                200000000000000n, // networkFeeAmount
+                300000000000000n, // networkFeeAmount
             ],
             {
-                value: 200000000000000n,
+                value: 300000000000000n,
             },
         );
         console.log(
@@ -96,10 +96,10 @@ class Myx {
                 true, // islong
                 300000n, // maxSlippage
                 0, // paymentType
-                200000000000000n, // networkFeeAmount
+                300000000000000n, // networkFeeAmount
             ],
             {
-                value: 200000000000000n,
+                value: 300000000000000n,
             },
         );
         console.log(c.green(`${this.signer.address} closed long on MYX`));
