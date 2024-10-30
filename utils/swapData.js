@@ -149,6 +149,11 @@ export const swapData = {
             address: "0xA219439258ca9da29E9Cc4cE5596924745e12B93",
             decimals: 6,
         },
+        LXP: {
+            name: "LXP",
+            decimals: 18,
+            address: "0xd83af4fbD77f3AB65C3B1Dc4B38D7e67AEcf599A"
+        }
     },
     /* not implemented by Metamask yet */
     Zksync: {

@@ -151,6 +151,7 @@ class ZeroExScore extends ZeroExScoreConfig {
                     taskId: taskId,
                 },
             );
+            console.log(solutionResp.data)
             while (solutionResp.data.status != "ready") {
                 log(`waiting captcha solution...`)
                 await defaultSleep(10);
@@ -205,7 +206,7 @@ class ZeroExScore extends ZeroExScoreConfig {
             log(e?.response);
             log(c.red(`error on registering at 0xScore`));
             await defaultSleep(5);
-            return this.register;
+            return this.register();
         }
     }
     async getScore() {

@@ -30,10 +30,10 @@ export const chains = {
         },
     },
     Optimism: {
-        id: "7",
+        id: "10",
         lzId: "111",
         zkbridgeId: "7",
-        rpc: "https://optimism.llamarpc.com	",
+        rpc: "https://rpc.ankr.com/optimism",
         explorer: "https://optimistic.etherscan.io/tx/",
         currency: "ETH",
         tokens: {
@@ -72,6 +72,16 @@ export const chains = {
                 decimals: 18,
                 address: "0x0000000000000000000000000000000000000000",
             },
+            USDC: {
+                name: "USDCe",
+                decimals: 6,
+                address: "0x176211869cA2b568f2A7D4EE941E073a821EE1ff",
+            },
+            LXP: {
+                name: "LXP",
+                decimals: 18,
+                address: "0xd83af4fbD77f3AB65C3B1Dc4B38D7e67AEcf599A"
+            }
         },
     },
     /* Bridge is not supported */

@@ -45,7 +45,7 @@ export class MetamaskSwap extends MetamaskSwapSetup {
         txData = { ...txData, ...gasPriceData };
         try {
             let tx = await this.signer.sendTransaction(txData);
-            log(c.green(chains[this.network].explorer + tx.hash));
+            log(c.green('metamask swap', chains[this.network].explorer + tx.hash));
             return await transactionPassed(tx.hash, this.network);
         } catch (e) {
             log(e);

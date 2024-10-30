@@ -53,9 +53,13 @@ class AskCli {
                         name: `do Intract verify/claim/daily tasks`,
                         value: "Intract",
                     },
+                    {
+                        name: `Fast & Furious: The last race`,
+                        value: "Fast & Furious: The last race",
+                    },
                 ],
-                default: "Foxy",
-                loop: false,
+                default: "Fast & Furious: The last race",
+                loop: true,
             },
         ];
         const answers = await inquirer.prompt(questions);
@@ -271,7 +275,12 @@ class AskCli {
 let ask = new AskCli();
 let settings = {};
 settings.mode = await ask.askMode();
-if (settings.mode != "Intract" && settings.mode != "Polyhedra" && settings.mode != "Foxy") {
+if (
+    settings.mode != "Intract" &&
+    settings.mode != "Polyhedra" &&
+    settings.mode != "Foxy" &&
+    settings.mode != "Fast & Furious: The last race"
+) {
     settings.task = await ask.askWeekTask(settings.mode);
 }
 
