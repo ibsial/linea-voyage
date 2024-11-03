@@ -282,34 +282,34 @@ switch (settings.mode) {
             await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
         }
     case "Fast & Furious: The last race":
-        for (let i = 0; i < privates.length; i++) {
-            let signer = new Wallet(privates[i]);
-            log(c.cyan(`#${i + 1}/${privates.length} ${signer.address} EYWA`));
-            let eywaResult = await useEywaBridge(signer);
-            await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
-        }
-        privates = await shuffleAndOverwriteKeys();
-        for (let i = 0; i < privates.length; i++) {
-            let signer = new Wallet(privates[i], new JsonRpcProvider(chains["Linea"].rpc));
-            let web3Wrapper = new WEb3Wrapper(signer, "Linea");
-            let LXPBalance = await web3Wrapper.getTokenBalance("LXP");
-            if (LXPBalance >= parseEther("1986")) {
-                log(c.magenta(`#${i + 1}/${privates.length} ${signer.address} LXP > 1985, skip`));
-                continue;
-            }
-            log(c.cyan(`#${i + 1}/${privates.length} ${signer.address} MYX`));
-            let myxResult = await completeMyxQuest(signer);
-            await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
-        }
-        // privates = RandomHelpers.shuffleArray(privates);
         // for (let i = 0; i < privates.length; i++) {
         //     let signer = new Wallet(privates[i]);
-        //     log(c.cyan(`#${i + 1}/${privates.length} ${signer.address} AlphaMind`));
-        //     let alphaResult = await confirmAlphaQuests(
-        //         signer,
-        //         RandomHelpers.chooseElementFromArray(proxies),
-        //     );
+        //     log(c.cyan(`#${i + 1}/${privates.length} ${signer.address} EYWA`));
+        //     let eywaResult = await useEywaBridge(signer);
         //     await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
         // }
+        // privates = await shuffleAndOverwriteKeys();
+        // for (let i = 0; i < privates.length; i++) {
+        //     let signer = new Wallet(privates[i], new JsonRpcProvider(chains["Linea"].rpc));
+        //     let web3Wrapper = new WEb3Wrapper(signer, "Linea");
+        //     let LXPBalance = await web3Wrapper.getTokenBalance("LXP");
+        //     if (LXPBalance >= parseEther("1986")) {
+        //         log(c.magenta(`#${i + 1}/${privates.length} ${signer.address} LXP > 1985, skip`));
+        //         continue;
+        //     }
+        //     log(c.cyan(`#${i + 1}/${privates.length} ${signer.address} MYX`));
+        //     let myxResult = await completeMyxQuest(signer);
+        //     await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
+        // }
+        // privates = RandomHelpers.shuffleArray(privates);
+        for (let i = 0; i < privates.length; i++) {
+            let signer = new Wallet(privates[i]);
+            log(c.cyan(`#${i + 1}/${privates.length} ${signer.address} AlphaMind`));
+            let alphaResult = await confirmAlphaQuests(
+                signer,
+                RandomHelpers.chooseElementFromArray(proxies),
+            );
+            await sleep(RandomHelpers.getRandomIntFromTo(sleepFromTo[0], sleepFromTo[1]));
+        }
 }
 await delayedPrint(randomChalk(`Our road diverges, so ${c.bold("@findmeonchain")} says goodbye!`));
